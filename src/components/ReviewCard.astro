@@ -1,0 +1,51 @@
+---
+/**
+ * Google review card — spec 5.2.
+ *
+ * Review text is the reviewer's own words, pasted verbatim by the client into
+ * src/data/reviews.json. This component never generates or paraphrases it; an
+ * entry with empty text is filtered out upstream and never renders.
+ */
+interface Props {
+  name: string;
+  stars: number;
+  text: string;
+  source?: string;
+}
+
+const { name, stars, text, source = "Google" } = Astro.props;
+const filled = Math.max(0, Math.min(5, Math.round(stars)));
+---
+
+<figure class="card-dark flex h-full flex-col p-6 lg:p-7">
+  <div class="flex items-center gap-1" role="img" aria-label={`${filled} out of 5 stars`}>
+    {
+      Array.from({ length: 5 }).map((_, index) => (
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill={index < filled ? "currentColor" : "none"}
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linejoin="round"
+          class="text-gold"
+          aria-hidden="true"
+        >
+          <path d="M12 2.5l2.9 5.9 6.6.95-4.75 4.63 1.12 6.52L12 17.42 6.13 20.5l1.12-6.52L2.5 9.35l6.6-.95L12 2.5z" />
+        </svg>
+      ))
+    }
+  </div>
+
+  <blockquote class="type-body mt-5 grow text-on-dark">
+    <p>{text}</p>
+  </blockquote>
+
+  <figcaption class="mt-6 border-t border-slate/50 pt-4">
+    <span class="block font-display text-[1.0625rem] uppercase tracking-[0.06em] text-on-dark">
+      {name}
+    </span>
+    <span class="type-small text-on-dark-mu">via {source}</span>
+  </figcaption>
+</figure>

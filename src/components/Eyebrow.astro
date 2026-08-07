@@ -1,0 +1,21 @@
+---
+/**
+ * Section eyebrow. Marcellus caps at 0.18em tracking — spec 4.3.
+ * Gold on dark surfaces, oxblood on light ones (gold text fails AA on
+ * parchment, spec 4.2).
+ */
+interface Props {
+  tone?: "on-dark" | "on-light" | "on-oxblood";
+  as?: "p" | "h2" | "span";
+  class?: string;
+}
+
+const { tone = "on-dark", as: Tag = "p", class: className = "" } = Astro.props;
+
+const color =
+  tone === "on-light" ? "text-oxblood" : tone === "on-oxblood" ? "text-gold-lo" : "text-gold";
+---
+
+<Tag class:list={["type-eyebrow", color, className]}>
+  <slot />
+</Tag>

@@ -1,0 +1,64 @@
+---
+/**
+ * Large meander frame used as the hero watermark.
+ *
+ * Spec 5.2: 3% opacity, top-right, rotated -12deg. Purely decorative and
+ * pointer-inert; it sits behind the hero content and must never reduce the
+ * contrast of text above it.
+ *
+ * Built from four rotated copies of the same tiling stroke that MeanderRule
+ * uses, arranged into a square frame — the same motif as the ring in the mark.
+ */
+
+interface Props {
+  class?: string;
+  /** Opacity as a decimal. Spec calls for 0.03. */
+  opacity?: number;
+}
+
+const { class: className = "", opacity = 0.03 } = Astro.props;
+
+const uid = `meander-wm-${Math.random().toString(36).slice(2, 9)}`;
+
+const SIDE = 480;
+const BAND = 16;
+const TILE_W = 24;
+const TILE_PATH = "M0 15 L0 1 L20 1 L20 11 L8 11 L8 5 L16 5 L16 15 L24 15";
+---
+
+<svg
+  viewBox={`0 0 ${SIDE} ${SIDE}`}
+  fill="none"
+  aria-hidden="true"
+  focusable="false"
+  class:list={["pointer-events-none select-none", className]}
+  style={`opacity:${opacity}`}
+>
+  <defs>
+    <pattern id={uid} width={TILE_W} height={BAND} patternUnits="userSpaceOnUse">
+      <path
+        d={TILE_PATH}
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="square"
+        fill="none"
+      />
+    </pattern>
+  </defs>
+
+  {/* Four bands rotated into a closed square frame. */}
+  <g fill={`url(#${uid})`}>
+    <rect width={SIDE} height={BAND} transform="translate(0,0)" />
+    <rect width={SIDE} height={BAND} transform={`translate(${SIDE},0) rotate(90)`} />
+    <rect width={SIDE} height={BAND} transform={`translate(${SIDE},${SIDE}) rotate(180)`} />
+    <rect width={SIDE} height={BAND} transform={`translate(0,${SIDE}) rotate(270)`} />
+  </g>
+
+  {/* Inner frame, echoing the concentric ring in the logo. */}
+  <g fill={`url(#${uid})`} transform={`translate(${SIDE * 0.18},${SIDE * 0.18}) scale(0.64)`}>
+    <rect width={SIDE} height={BAND} transform="translate(0,0)" />
+    <rect width={SIDE} height={BAND} transform={`translate(${SIDE},0) rotate(90)`} />
+    <rect width={SIDE} height={BAND} transform={`translate(${SIDE},${SIDE}) rotate(180)`} />
+    <rect width={SIDE} height={BAND} transform={`translate(0,${SIDE}) rotate(270)`} />
+  </g>
+</svg>

@@ -1,0 +1,113 @@
+---
+/**
+ * Base layout. Owns <head>, the landmarks, and the JSON-LD slot.
+ * Spec 4.7 (semantic landmarks) and Section 10 (SEO and metadata).
+ */
+import "@/styles/tokens.css";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import MobileCallBar from "@/components/MobileCallBar.astro";
+import { siteUrl, brandName, url } from "@/data/site";
+
+interface Props {
+  /** Page name only. The title pattern is applied here. */
+  title: string;
+  /** Hand-written, 150–160 characters. Never generated. */
+  description: string;
+  /** Set true on the homepage to use the bespoke title verbatim. */
+  rawTitle?: boolean;
+  /** Keep the page out of the index — used by /careers/admin and /thank-you. */
+  noindex?: boolean;
+  /** Hide the fixed mobile call bar. Admin only. */
+  hideCallBar?: boolean;
+  /** JSON-LD objects serialised into the head. */
+  schema?: unknown[];
+  /** Override the canonical path. Defaults to the current pathname. */
+  canonicalPath?: string;
+}
+
+const {
+  title,
+  description,
+  rawTitle = false,
+  noindex = false,
+  hideCallBar = false,
+  schema = [],
+  canonicalPath,
+} = Astro.props;
+
+const fullTitle = rawTitle ? title : `${title} | ${brandName} | Louisville, KY`;
+
+const path = canonicalPath ?? Astro.url.pathname.replace(/\/+$/, "");
+const canonical = new URL(path || "/", siteUrl).href;
+const ogImage = new URL("/og-default.png", siteUrl).href;
+---
+
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- Icons -->
+    <link rel="icon" href={url("/favicon.svg")} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={url("/apple-touch-icon.png")} />
+    <meta name="theme-color" content="#16130F" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={brandName} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <link rel="sitemap" href={url("/sitemap-index.xml")} />
+
+    {
+      schema.map((item) => (
+        <script
+          type="application/ld+json"
+          is:inline
+          set:html={JSON.stringify(item)}
+        />
+      ))
+    }
+
+    <slot name="head" />
+  </head>
+
+  <body class:list={[!hideCallBar && "pb-[56px] lg:pb-0"]}>
+    <a
+      href="#main"
+      class="sr-only-focusable focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:h-auto focus:w-auto focus:overflow-visible focus:rounded-[4px] focus:bg-parchment focus:px-4 focus:py-2 focus:text-on-light focus:[clip:auto]"
+    >
+      Skip to content
+    </a>
+
+    <Header />
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <Footer />
+
+    {!hideCallBar && <MobileCallBar />}
+  </body>
+</html>

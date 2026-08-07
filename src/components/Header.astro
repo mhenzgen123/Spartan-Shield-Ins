@@ -1,0 +1,210 @@
+---
+/**
+ * Global header — spec 5.1.
+ *
+ * Sticky, 72px desktop / 60px mobile. Carries a persistent "call or text"
+ * element so the phone number is reachable from every page without scrolling.
+ *
+ * The mobile menu is one of only four places on the site that ships JS
+ * (spec 3.2). It is a plain script, not an island — no framework needed for a
+ * toggle.
+ */
+import { nav, mainPhone, brandName, url } from "@/data/site";
+import Logo from "./Logo.astro";
+
+const { pathname } = Astro.url;
+const current = pathname.replace(/\/+$/, "") || "/";
+
+function isCurrent(href: string) {
+  return href === "/" ? current === "/" : current === href || current.startsWith(href + "/");
+}
+---
+
+<header
+  class="sticky top-0 z-50 border-b border-slate/40 bg-ink/95 backdrop-blur-md supports-[backdrop-filter]:bg-ink/85"
+>
+  <div class="container-site">
+    <div class="flex h-[60px] items-center justify-between gap-4 lg:h-[72px]">
+      <!-- Wordmark -->
+      <a
+        href={url("/")}
+        class="flex items-center gap-3 no-underline"
+        aria-label={`${brandName} — home`}
+      >
+        <Logo size={34} class="text-gold" />
+        <span class="flex flex-col leading-none">
+          <span
+            class="font-display text-[1.0625rem] uppercase leading-none tracking-[0.09em] text-on-dark lg:text-[1.1875rem]"
+            >Spartan Shield</span
+          >
+          <span
+            class="mt-[3px] text-[0.6875rem] font-medium uppercase leading-none tracking-[0.2em] text-on-dark-mu"
+            >Insurance</span
+          >
+        </span>
+      </a>
+
+      <!-- Desktop nav -->
+      <nav aria-label="Primary" class="hidden lg:block">
+        <ul class="flex items-center gap-8">
+          {
+            nav.map((item) => (
+              <li>
+                <a
+                  href={url(item.href)}
+                  aria-current={isCurrent(item.href) ? "page" : undefined}
+                  class:list={[
+                    "text-[0.9375rem] font-medium no-underline transition-colors duration-150",
+                    isCurrent(item.href)
+                      ? "text-gold"
+                      : "text-on-dark hover:text-gold-lo",
+                  ]}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <!-- Desktop call/text -->
+      <a
+        href={mainPhone.tel}
+        class="hidden flex-col items-end no-underline lg:flex"
+        aria-label={`Call or text Spartan Shield Insurance at ${mainPhone.display}`}
+      >
+        <span class="type-eyebrow text-[0.6875rem] text-on-dark-mu">Call or text</span>
+        <span
+          class="text-[1.0625rem] font-semibold tabular-nums leading-tight text-gold transition-colors duration-150 hover:text-gold-lo"
+          >{mainPhone.display}</span
+        >
+      </a>
+
+      <!-- Mobile menu trigger -->
+      <button
+        type="button"
+        id="nav-toggle"
+        class="-mr-2 inline-flex h-11 w-11 items-center justify-center rounded-[4px] text-on-dark lg:hidden"
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+        aria-label="Open menu"
+      >
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          aria-hidden="true"
+          data-icon="open"
+        >
+          <path d="M3 6h18M3 12h18M3 18h18"></path>
+        </svg>
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          aria-hidden="true"
+          data-icon="close"
+        >
+          <path d="M6 6l12 12M18 6L6 18"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<style>
+  /* The hamburger/close swap is driven entirely by aria-expanded, so the
+     script only ever has to manage one attribute and the two stay in sync. */
+  #nav-toggle[aria-expanded="false"] [data-icon="close"],
+  #nav-toggle[aria-expanded="true"] [data-icon="open"] {
+    display: none;
+  }
+</style>
+
+<!-- Full-screen ink overlay -->
+<div
+  id="mobile-nav"
+  class="fixed inset-0 z-40 hidden flex-col bg-ink pt-[60px] lg:hidden"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Site menu"
+  hidden
+>
+  <nav aria-label="Mobile" class="container-site flex-1 overflow-y-auto py-8">
+    <ul class="flex flex-col">
+      {
+        nav.map((item) => (
+          <li class="border-b border-slate/40">
+            <a
+              href={url(item.href)}
+              aria-current={isCurrent(item.href) ? "page" : undefined}
+              class:list={[
+                "block py-4 text-[1.375rem] font-semibold no-underline",
+                isCurrent(item.href) ? "text-gold" : "text-on-dark",
+              ]}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <a href={mainPhone.tel} class="mt-10 block no-underline">
+      <span class="type-eyebrow block text-on-dark-mu">Call or text</span>
+      <span class="mt-1 block text-[2rem] font-bold tabular-nums tracking-[-0.02em] text-gold"
+        >{mainPhone.display}</span
+      >
+    </a>
+  </nav>
+</div>
+
+<script>
+  // Mobile navigation toggle. Interactivity budget item 1 of 4 (spec 3.2).
+  const toggle = document.getElementById("nav-toggle");
+  const panel = document.getElementById("mobile-nav");
+
+  if (toggle && panel) {
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      panel.hidden = !open;
+      panel.classList.toggle("hidden", !open);
+      panel.classList.toggle("flex", open);
+      // Stop the page scrolling behind the overlay.
+      document.documentElement.style.overflow = open ? "hidden" : "";
+    };
+
+    toggle.addEventListener("click", () => {
+      setOpen(toggle.getAttribute("aria-expanded") !== "true");
+    });
+
+    // Escape closes and returns focus to the trigger.
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && toggle.getAttribute("aria-expanded") === "true") {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+
+    // Any navigation inside the overlay closes it.
+    panel.addEventListener("click", (event) => {
+      if ((event.target as HTMLElement).closest("a")) setOpen(false);
+    });
+
+    // Leaving the mobile breakpoint must not strand the overlay open.
+    const desktop = window.matchMedia("(min-width: 1024px)");
+    desktop.addEventListener("change", (event) => {
+      if (event.matches) setOpen(false);
+    });
+  }
+</script>

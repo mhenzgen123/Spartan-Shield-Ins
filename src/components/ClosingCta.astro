@@ -1,0 +1,38 @@
+---
+/**
+ * Closing CTA band — spec 5.2.
+ * Oxblood background, centred, with the phone number at large display size.
+ * Reused at the foot of most pages, which is why it lives in a component.
+ */
+import { mainPhone } from "@/data/site";
+import PhoneDisplay from "./PhoneDisplay.astro";
+
+interface Props {
+  heading?: string;
+  body?: string;
+}
+
+const {
+  heading = "Get a real answer in ten minutes.",
+  body = "Call or text and you will reach Sam or Nick, not a queue.",
+} = Astro.props;
+---
+
+<section class="section-y bg-oxblood text-parchment">
+  <div class="container-site">
+    <div class="mx-auto flex max-w-3xl flex-col items-center text-center">
+      <h2 class="type-h2">{heading}</h2>
+      <p class="type-body mt-4 max-w-xl text-parchment/85">{body}</p>
+
+      <PhoneDisplay
+        phone={mainPhone}
+        scale="large"
+        tone="on-oxblood"
+        rule={true}
+        buttons={true}
+        align="center"
+        class="mt-10 w-full"
+      />
+    </div>
+  </div>
+</section>

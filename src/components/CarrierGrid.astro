@@ -1,0 +1,64 @@
+---
+/**
+ * Carrier logo grid — spec 5.2.
+ *
+ * Logos must be UNMODIFIED and FULL COLOUR on white cards. Do not recolour,
+ * crop, grayscale, or apply filters to a carrier mark — appointment agreements
+ * generally forbid it.
+ *
+ * Logo files were not supplied at build time, so each slot renders a labelled
+ * placeholder. The moment a real file lands at public/carriers/<file>, this
+ * component picks it up automatically on the next build. No code change needed.
+ *
+ * Sam: pull each logo from that carrier's AGENT PORTAL BRAND KIT. Do not
+ * download them from the open web — portal versions are the approved ones.
+ */
+import fs from "node:fs";
+import path from "node:path";
+import carriers from "@/data/carriers.json";
+import { url } from "@/data/site";
+
+const publicDir = path.resolve(process.cwd(), "public", "carriers");
+
+const items = carriers.map((carrier) => ({
+  ...carrier,
+  present: fs.existsSync(path.join(publicDir, carrier.file)),
+}));
+
+const missing = items.filter((item) => !item.present).length;
+if (missing > 0) {
+  console.warn(
+    `[carriers] ${missing} of ${items.length} carrier logos are placeholders. ` +
+      `Drop the approved files into public/carriers/ to replace them.`,
+  );
+}
+---
+
+<ul class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-3 lg:gap-6">
+  {
+    items.map((item) => (
+      <li class="card-light flex aspect-[5/2] items-center justify-center p-5">
+        {item.present ? (
+          <img
+            src={url(`/carriers/${item.file}`)}
+            alt={`${item.name} logo`}
+            width="200"
+            height="80"
+            loading="lazy"
+            decoding="async"
+            class="max-h-full w-auto max-w-full object-contain"
+          />
+        ) : (
+          <div
+            class="flex h-full w-full items-center justify-center rounded-[4px] border border-dashed border-on-light-mu/35 px-3 text-center"
+            data-placeholder="carrier-logo"
+          >
+            <span class="text-[0.9375rem] font-semibold leading-tight text-on-light-mu">
+              {item.name}
+            </span>
+          </div>
+        )}
+      </li>
+    ))
+  }
+</ul>

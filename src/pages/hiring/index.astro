@@ -1,0 +1,107 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Eyebrow from "@/components/Eyebrow.astro";
+import MeanderWatermark from "@/components/MeanderWatermark.astro";
+import RoleCard from "@/components/RoleCard.astro";
+import ClosingCta from "@/components/ClosingCta.astro";
+import roleData from "@/data/roles.json";
+import { address, url } from "@/data/site";
+
+const roles = roleData.roles;
+
+const reasons = [
+  {
+    title: "Independent, not captive.",
+    body: "Nine carriers means you can actually solve the problem in front of you instead of explaining why your one company said no.",
+  },
+  {
+    title: "Owners who still sell.",
+    body: "Nick and Sam write business every week. You will be trained by people doing the job, not managing it.",
+  },
+  {
+    title: "Early enough to matter.",
+    body: "The next hires shape how this agency runs. That window closes at most agencies before anyone gets to use it.",
+  },
+  {
+    title: "Hybrid in Louisville.",
+    body: `Office at ${address.street} with flexibility, not a five-day mandate.`,
+  },
+];
+---
+
+<BaseLayout
+  title="Hiring"
+  description="Spartan Shield Insurance is hiring a Sales Executive and a Client Relations Specialist in Louisville, KY. Hybrid, nine carriers, owners who still sell."
+>
+  <!-- Hero -->
+  <section class="relative isolate overflow-hidden bg-ink" aria-labelledby="hiring-heading">
+    <MeanderWatermark
+      class="pointer-events-none absolute -right-24 -top-20 z-0 h-[440px] w-[440px] rotate-[-12deg] text-gold lg:h-[560px] lg:w-[560px]"
+      opacity={0.03}
+    />
+
+    <div class="container-site relative z-10">
+      <div class="max-w-3xl py-20 lg:py-28">
+        <Eyebrow>Careers at Spartan Shield</Eyebrow>
+        <h1 id="hiring-heading" class="type-h1 mt-6 text-on-dark">
+          We are hiring two people in Louisville.
+        </h1>
+        <p class="type-body mt-6 max-w-xl text-on-dark-mu">
+          A two-year-old independent agency with nine carrier appointments, room to build a book,
+          and two owners who still write business themselves. Hybrid in Louisville, Kentucky.
+        </p>
+
+        <div class="mt-10 flex flex-col gap-3 sm:flex-row">
+          <a href="#open-roles" class="btn btn-primary">See open roles</a>
+          <a href={url("/hiring/apply")} class="btn btn-outline">Apply now</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why work here -->
+  <section class="section-y bg-parchment" aria-labelledby="why-heading">
+    <div class="container-site">
+      <Eyebrow tone="on-light">Why work here</Eyebrow>
+      <h2 id="why-heading" class="type-h2 mt-4 max-w-2xl text-on-light">
+        A small agency where the work you do is visible.
+      </h2>
+
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:mt-14 lg:gap-8">
+        {
+          reasons.map((reason) => (
+            <div class="border-l-2 border-oxblood/30 pl-5">
+              <h3 class="type-h3 text-on-light">{reason.title}</h3>
+              <p class="type-body mt-2 text-on-light-mu">{reason.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Open roles -->
+  <section id="open-roles" class="section-y bg-ink" aria-labelledby="roles-heading">
+    <div class="container-site">
+      <Eyebrow>Open roles</Eyebrow>
+      <h2 id="roles-heading" class="type-h2 mt-4 max-w-2xl text-on-dark">
+        Two seats, both hybrid in Louisville.
+      </h2>
+
+      <div class="mt-12 grid gap-6 lg:mt-14 lg:grid-cols-2 lg:gap-8">
+        {roles.map((role) => <RoleCard role={role} />)}
+      </div>
+
+      <p class="type-small mt-10 max-w-2xl text-on-dark-mu">
+        Not a match for either role but think you belong here? Send a note through the{" "}
+        <a href={url("/contact")} class="prose-link prose-link-on-dark">contact form</a> and pick
+        "Careers" as the topic.
+      </p>
+    </div>
+  </section>
+
+  <ClosingCta
+    heading="Questions before you apply?"
+    body="Call or text either owner directly. We would rather have the conversation than trade emails."
+  />
+</BaseLayout>

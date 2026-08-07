@@ -1,0 +1,114 @@
+---
+/**
+ * Leadership card — spec 5.3.
+ *
+ * Square headshot on cream, gold hairline meander rule beneath, name in
+ * Marcellus caps, title in Archivo 500, then a contact block where both the
+ * phone and the email are real links with visible focus states.
+ *
+ * Headshots were supplied to the project as images but not as files in the
+ * repository, so this renders a monogram placeholder until they are added.
+ * Drop these four files into public/team/ and the photo appears automatically:
+ *
+ *   <slug>-500.webp   <slug>-1000.webp
+ *   <slug>-500.jpg    <slug>-1000.jpg
+ *
+ * Normalise to a 1:1 crop before exporting. Note from the spec's open items:
+ * Sam's original is 733x738 and will be slightly softer than Nick's at 1000px.
+ */
+import fs from "node:fs";
+import path from "node:path";
+import { url, type Leader } from "@/data/site";
+import MeanderRule from "./MeanderRule.astro";
+
+interface Props {
+  leader: Leader;
+}
+
+const { leader } = Astro.props;
+
+const teamDir = path.resolve(process.cwd(), "public", "team");
+const base = `${leader.slug}`;
+const hasPhoto = fs.existsSync(path.join(teamDir, `${base}-1000.jpg`));
+
+const initials = leader.name
+  .split(" ")
+  .map((part) => part[0])
+  .join("");
+---
+
+<article class="card-dark overflow-hidden">
+  <div class="aspect-square w-full bg-cream">
+    {
+      hasPhoto ? (
+        <picture>
+          <source
+            type="image/webp"
+            srcset={`${url(`/team/${base}-500.webp`)} 500w, ${url(`/team/${base}-1000.webp`)} 1000w`}
+            sizes="(min-width: 1024px) 560px, 100vw"
+          />
+          <img
+            src={url(`/team/${base}-1000.jpg`)}
+            srcset={`${url(`/team/${base}-500.jpg`)} 500w, ${url(`/team/${base}-1000.jpg`)} 1000w`}
+            sizes="(min-width: 1024px) 560px, 100vw"
+            alt={leader.headshotAlt}
+            width="1000"
+            height="1000"
+            loading="lazy"
+            decoding="async"
+            class="h-full w-full object-cover"
+          />
+        </picture>
+      ) : (
+        <div
+          class="flex h-full w-full items-center justify-center"
+          data-placeholder="headshot"
+          role="img"
+          aria-label={`Photograph of ${leader.name} — pending`}
+        >
+          <span class="font-display text-[clamp(3rem,10vw,5rem)] tracking-[0.08em] text-oxblood/30">
+            {initials}
+          </span>
+        </div>
+      )
+    }
+  </div>
+
+  <div class="p-6 lg:p-8">
+    <MeanderRule variant="center" width={110} class="text-gold/70" />
+
+    <h2 class="type-founder mt-6 text-on-dark">{leader.displayName}</h2>
+    <p class="mt-1 text-[0.9375rem] font-medium text-on-dark-mu">{leader.title}</p>
+
+    <dl class="mt-6 grid gap-4 sm:grid-cols-2">
+      <div>
+        <dt class="type-eyebrow text-[0.6875rem] text-gold">Direct</dt>
+        <dd class="mt-1">
+          <a
+            href={leader.phone.tel}
+            class="text-[1.0625rem] font-semibold tabular-nums text-on-dark no-underline transition-colors duration-150 hover:text-gold-lo"
+          >
+            {leader.phone.display}
+          </a>
+        </dd>
+      </div>
+
+      <div class="min-w-0">
+        <dt class="type-eyebrow text-[0.6875rem] text-gold">Email</dt>
+        <dd class="mt-1">
+          <a
+            href={`mailto:${leader.email}`}
+            class="block break-all text-[0.9375rem] text-on-dark no-underline transition-colors duration-150 hover:text-gold-lo"
+          >
+            {leader.email}
+          </a>
+        </dd>
+      </div>
+    </dl>
+
+    <div class="mt-7 flex flex-col gap-3 sm:flex-row">
+      <a href={leader.phone.tel} class="btn btn-primary sm:flex-1">Call {leader.name.split(" ")[0]}</a>
+      <a href={leader.phone.sms} class="btn btn-outline sm:flex-1">Send a text</a>
+    </div>
+  </div>
+</article>

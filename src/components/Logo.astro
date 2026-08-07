@@ -1,0 +1,57 @@
+---
+/**
+ * Spartan Shield mark — the shield roundel with the stacked lambda chevrons.
+ *
+ * PLACEHOLDER GEOMETRY. This is a clean vector interpretation of the dominant
+ * element of the supplied logo (the ringed shield with nested chevrons) so the
+ * site has a real, scalable, single-colour mark that inherits currentColor.
+ *
+ * TO REPLACE WITH THE PRODUCTION ARTWORK:
+ *   1. Export the mark from the source file as an optimised SVG.
+ *   2. Save it to public/logo/mark.svg.
+ *   3. Swap the <svg> below for the exported paths, keeping fill="currentColor"
+ *      so the header, footer, and light sections keep tinting it correctly.
+ *
+ * Do not raster this. The header renders it at 2 sizes and the OG image at a
+ * third.
+ */
+
+interface Props {
+  class?: string;
+  /** Rendered pixel size (square). */
+  size?: number;
+  /** Decorative by default; the wordmark beside it carries the accessible name. */
+  title?: string;
+}
+
+const { class: className = "", size = 36, title } = Astro.props;
+---
+
+<svg
+  width={size}
+  height={size}
+  viewBox="0 0 100 100"
+  fill="none"
+  role={title ? "img" : undefined}
+  aria-hidden={title ? undefined : "true"}
+  aria-label={title}
+  focusable="false"
+  class:list={["shrink-0", className]}
+>
+  {title && <title>{title}</title>}
+
+  {/* Outer ring */}
+  <circle cx="50" cy="50" r="46" stroke="currentColor" stroke-width="4" />
+  {/* Inner ring — stands in for the meander band on the production mark */}
+  <circle cx="50" cy="50" r="38" stroke="currentColor" stroke-width="2" opacity="0.5" />
+
+  {/* Stacked lambda chevrons */}
+  <path
+    d="M50 24 L79 53 L67 53 L50 36 L33 53 L21 53 Z"
+    fill="currentColor"
+  />
+  <path
+    d="M50 50 L74 74 L62 74 L50 62 L38 74 L26 74 Z"
+    fill="currentColor"
+  />
+</svg>

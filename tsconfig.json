@@ -1,0 +1,27 @@
+{
+  "extends": "./node_modules/astro/tsconfigs/strict.json",
+  "include": [
+    ".astro/types.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.astro"
+  ],
+  "exclude": [
+    "dist",
+    "node_modules",
+    "functions"
+  ],
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "types": [
+      "astro/client"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    }
+  }
+}

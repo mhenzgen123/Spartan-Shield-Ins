@@ -1,0 +1,155 @@
+---
+/**
+ * SMS Terms and Conditions — spec 6.5.
+ *
+ * A STANDALONE PAGE, not a section of the privacy policy. TCR reviewers
+ * frequently ask for a dedicated URL, and both consent checkbox labels link
+ * here by name. All ten sections from the spec are present and numbered.
+ */
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Eyebrow from "@/components/Eyebrow.astro";
+import {
+  legalName,
+  brandName,
+  tradeNameDeclaration,
+  address,
+  mainPhone,
+  primaryEmail,
+  leaders,
+  hours,
+  legalLastUpdated,
+  url,
+} from "@/data/site";
+---
+
+<BaseLayout
+  title="SMS Terms and Conditions"
+  description="Text messaging terms for Spartan Shield Insurance: program description, how to opt in and out, message frequency, rates, HELP instructions, and eligibility."
+>
+  <section class="section-y bg-parchment">
+    <div class="container-site">
+      <div class="max-w-3xl">
+        <Eyebrow tone="on-light">Legal</Eyebrow>
+        <h1 class="type-h1 mt-6 text-on-light">SMS Terms and Conditions</h1>
+        <p class="type-small mt-4 text-on-light-mu">Last updated: {legalLastUpdated}</p>
+
+        <div class="legal-prose mt-12">
+          <h2 id="program-description">1. Program description</h2>
+          <p>
+            {brandName} operates two text messaging programs:
+          </p>
+          <ul>
+            <li>
+              <strong>Service program</strong> — messages about quotes, policy servicing,
+              billing, claims, and general correspondence with your agent.
+            </li>
+            <li>
+              <strong>Marketing program</strong> — renewal reminders, coverage review offers, and
+              agency news.
+            </li>
+          </ul>
+          <p>
+            The two programs are separate. Opting in to one does not opt you in to the other, and
+            you can opt out of either at any time.
+          </p>
+
+          <h2 id="how-to-opt-in">2. How to opt in</h2>
+          <p>You can join either program by:</p>
+          <ul>
+            <li>
+              Checking the corresponding box on our <a href={url("/contact")}>contact form</a>
+            </li>
+            <li>
+              Providing your number and giving verbal consent during a call with a licensed agent
+            </li>
+            <li>Texting us first at {mainPhone.display}</li>
+          </ul>
+          <p>
+            Consent to receive marketing text messages is not a condition of purchasing any
+            product or service from us.
+          </p>
+
+          <h2 id="message-frequency">3. Message frequency</h2>
+          <p>
+            Service messages vary by your activity — a quote in progress or an open claim
+            generates more messages than a policy that is simply in force. Marketing messages are
+            limited to 6 per month.
+          </p>
+
+          <h2 id="cost">4. Cost</h2>
+          <p>
+            Message and data rates may apply. {brandName} does not charge for the messages; your
+            mobile carrier may, depending on your plan.
+          </p>
+
+          <h2 id="how-to-opt-out">5. How to opt out</h2>
+          <p>
+            Reply <strong>STOP</strong> to any message. We send one confirmation that you have
+            been unsubscribed, and no further messages are delivered. Reply{" "}
+            <strong>START</strong> to resubscribe at any time. Opt-out requests are processed
+            within 24 hours.
+          </p>
+
+          <h2 id="how-to-get-help">6. How to get help</h2>
+          <p>
+            Reply <strong>HELP</strong> to any message, call{" "}
+            <a href={mainPhone.tel}>{mainPhone.display}</a>, or email{" "}
+            <a href={`mailto:${primaryEmail}`}>{primaryEmail}</a>.
+          </p>
+
+          <h2 id="supported-carriers">7. Supported carriers</h2>
+          <p>
+            AT&amp;T, Verizon Wireless, T-Mobile, and others. Carriers are not liable for delayed
+            or undelivered messages.
+          </p>
+
+          <h2 id="eligibility">8. Eligibility</h2>
+          <p>
+            You must be 18 or older, and the account holder or an authorized user of the mobile
+            number you provide.
+          </p>
+
+          <h2 id="privacy">9. Privacy</h2>
+          <p>
+            Our full <a href={url("/privacy")}>Privacy Policy</a> explains what we collect and how we use
+            it. To restate the part that matters most here:
+          </p>
+
+          <div class="legal-callout">
+            <p>
+              <strong>
+                No mobile information will be shared with third parties or affiliates for
+                marketing or promotional purposes.
+              </strong>{" "}
+              All other categories of information sharing exclude text messaging originator
+              opt-in data and consent; this information will not be shared with any third
+              parties.
+            </p>
+          </div>
+
+          <h2 id="contact">10. Contact</h2>
+          <p>
+            {legalName}<br />
+            {brandName}<br />
+            {address.street}, {address.suite}<br />
+            {address.city}, {address.state} {address.zip}
+          </p>
+          <p>
+            Main line: <a href={mainPhone.tel}>{mainPhone.display}</a><br />
+            {
+              leaders.map((leader) => (
+                <>
+                  {leader.name}: <a href={leader.phone.tel}>{leader.phone.display}</a> ·{" "}
+                  <a href={`mailto:${leader.email}`}>{leader.email}</a>
+                  <br />
+                </>
+              ))
+            }
+            Hours: {hours.display}
+          </p>
+          <p>{tradeNameDeclaration}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

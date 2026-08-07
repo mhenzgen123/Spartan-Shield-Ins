@@ -1,0 +1,37 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Eyebrow from "@/components/Eyebrow.astro";
+import LeaderCard from "@/components/LeaderCard.astro";
+import ClosingCta from "@/components/ClosingCta.astro";
+import { leaders, licensingLine } from "@/data/site";
+---
+
+<BaseLayout
+  title="Leadership"
+  description="Meet Sam Genuis and Nick Henzgen, co-founders of Spartan Shield Insurance in Louisville, Kentucky. Both owners carry a direct line, and both answer it."
+>
+  <section class="section-y bg-ink" aria-labelledby="leadership-heading">
+    <div class="container-site">
+      <div class="max-w-2xl">
+        <Eyebrow>Leadership</Eyebrow>
+        <h1 id="leadership-heading" class="type-h1 mt-6 text-on-dark">
+          Two owners. Two direct lines.
+        </h1>
+        <p class="type-body mt-6 text-on-dark-mu">
+          There is no service tier you get routed into after you sign. When you call Spartan
+          Shield, you reach one of the two people whose names are on the company.
+        </p>
+      </div>
+
+      <div class="mt-14 grid gap-6 lg:mt-16 lg:grid-cols-2 lg:gap-8">
+        {leaders.map((leader) => <LeaderCard leader={leader} />)}
+      </div>
+
+      <p class="type-small mt-12 max-w-3xl text-on-dark-mu">
+        {licensingLine}
+      </p>
+    </div>
+  </section>
+
+  <ClosingCta />
+</BaseLayout>

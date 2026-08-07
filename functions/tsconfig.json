@@ -1,0 +1,22 @@
+{
+  // The Pages Functions run in the Workers runtime, not the browser, so they
+  // need their own type context. Mixing @cloudflare/workers-types into the
+  // Astro tsconfig would put Workers globals in scope for client code and
+  // shadow the DOM lib.
+  //
+  // Check with: npm run check:functions
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "types": ["@cloudflare/workers-types"],
+    "strict": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["**/*.ts"]
+}

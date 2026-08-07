@@ -1,0 +1,151 @@
+---
+/**
+ * /contact — THE COMPLIANCE-CRITICAL PAGE.
+ *
+ * This is the "call to action" a Campaign Registry reviewer looks for. It must
+ * stay reachable in one click from the homepage, with no login, and it must
+ * keep the consent block from Section 6.2 intact. Seven of the eight codes on
+ * the previous denial were call-to-action failures.
+ */
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Eyebrow from "@/components/Eyebrow.astro";
+import PhoneDisplay from "@/components/PhoneDisplay.astro";
+import ContactForm from "@/components/ContactForm";
+import {
+  mainPhone,
+  leaders,
+  address,
+  hours,
+  siteUrl,
+  brandName,
+  legalName,
+} from "@/data/site";
+
+const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY as string | undefined;
+
+const contactSchema = {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  name: `Contact ${brandName}`,
+  url: `${siteUrl}/contact`,
+  mainEntity: {
+    "@type": "InsuranceAgency",
+    name: brandName,
+    legalName,
+    telephone: `+1${mainPhone.raw}`,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: `${address.street}, ${address.suite}`,
+      addressLocality: address.city,
+      addressRegion: address.state,
+      postalCode: address.zip,
+      addressCountry: address.country,
+    },
+  },
+};
+---
+
+<BaseLayout
+  title="Contact"
+  description={`Call or text Spartan Shield Insurance at ${mainPhone.display}, or send us a message. Independent insurance brokers in Louisville, Kentucky. Weekdays 8am to 6pm ET.`}
+  schema={[contactSchema]}
+>
+  <!--
+    LAYOUT IS LOAD-BEARING HERE. The form column starts at the top of the page
+    rather than below a full-width intro, because the acceptance criterion is
+    that the COMPLETE consent block is visible on a 1440x900 viewport with no
+    scrolling — a TCR reviewer has to be able to capture it in one screenshot.
+    The page intro lives inside the left column so it cannot push the form
+    down. Re-check a 1440x900 screenshot before changing this.
+  -->
+  <section
+    class="bg-parchment pb-20 pt-8 lg:pb-28 lg:pt-10"
+    aria-labelledby="contact-heading"
+  >
+    <div class="container-site">
+      <div class="grid gap-12 lg:grid-cols-12 lg:gap-14">
+        <!-- ==============================================================
+             LEFT: how to reach us
+             ============================================================== -->
+        <div class="lg:col-span-6">
+          <Eyebrow tone="on-light">Contact</Eyebrow>
+          <h1 id="contact-heading" class="type-h1 mt-5 text-on-light">
+            The fastest way to reach us is to call.
+          </h1>
+          <p class="type-body mt-5 max-w-lg text-on-light-mu">
+            You will reach Sam or Nick, not a queue. If it is easier to write, the form goes to
+            both of us.
+          </p>
+
+          <PhoneDisplay
+            phone={mainPhone}
+            scale="large"
+            tone="on-light"
+            rule={true}
+            buttons={true}
+            microline={hours.short}
+            class="mt-10"
+          />
+
+          <div class="mt-12 grid gap-6 sm:grid-cols-2">
+            {
+              leaders.map((leader) => (
+                <div class="card-light p-6">
+                  <p class="font-display text-[1.0625rem] uppercase tracking-[0.06em] text-on-light">
+                    {leader.name}
+                  </p>
+                  <p class="type-small mt-1 text-on-light-mu">{leader.title}</p>
+
+                  <a
+                    href={leader.phone.tel}
+                    class="mt-4 block text-[1.0625rem] font-semibold tabular-nums text-oxblood no-underline transition-colors duration-150 hover:text-oxblood-lo"
+                  >
+                    {leader.phone.display}
+                  </a>
+                  <a
+                    href={`mailto:${leader.email}`}
+                    class="type-small mt-1 block break-all text-on-light-mu no-underline underline-offset-2 transition-colors duration-150 hover:text-oxblood hover:underline"
+                  >
+                    {leader.email}
+                  </a>
+                </div>
+              ))
+            }
+          </div>
+
+          <dl class="mt-10 space-y-6">
+            <div>
+              <dt class="type-eyebrow text-oxblood">Office</dt>
+              <dd class="type-body mt-2 text-on-light-mu">
+                <address class="not-italic">
+                  {address.street}<br />
+                  {address.suite}<br />
+                  {address.city}, {address.state} {address.zip}
+                </address>
+              </dd>
+            </div>
+
+            <div>
+              <dt class="type-eyebrow text-oxblood">Hours</dt>
+              <dd class="type-body mt-2 text-on-light-mu">{hours.display}</dd>
+            </div>
+          </dl>
+        </div>
+
+        <!-- ==============================================================
+             RIGHT: the form (carries the SMS opt-in)
+             ============================================================== -->
+        <div class="lg:col-span-6">
+          <div class="card-light p-5 lg:p-7">
+            <h2 class="type-h3 text-[1.5rem] text-on-light">Or send us a message</h2>
+            <p class="type-small mt-1.5 text-on-light-mu">We answer weekdays, 8am to 6pm ET.</p>
+
+            <div class="mt-6">
+              <ContactForm siteKey={siteKey} client:load />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

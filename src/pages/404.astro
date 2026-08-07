@@ -1,0 +1,47 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Eyebrow from "@/components/Eyebrow.astro";
+import MeanderRule from "@/components/MeanderRule.astro";
+import { mainPhone, nav, url } from "@/data/site";
+---
+
+<BaseLayout
+  title="Page not found"
+  description={`That page does not exist. Call or text Spartan Shield Insurance in Louisville at ${mainPhone.display}, or use the links below to find what you need.`}
+  noindex={true}
+>
+  <section class="section-y bg-ink">
+    <div class="container-site">
+      <div class="max-w-2xl">
+        <Eyebrow>404</Eyebrow>
+        <h1 class="type-h1 mt-6 text-on-dark">That page does not exist.</h1>
+        <p class="type-body mt-6 text-on-dark-mu">
+          The link may be out of date. Here is everything on the site, or just call us — that is
+          faster anyway.
+        </p>
+
+        <MeanderRule variant="center" width={140} class="mt-10 max-w-md text-gold/70" />
+
+        <ul class="mt-10 flex flex-wrap gap-x-8 gap-y-3">
+          {
+            nav.map((item) => (
+              <li>
+                <a
+                  href={url(item.href)}
+                  class="text-[1.0625rem] font-semibold text-on-dark no-underline transition-colors duration-150 hover:text-gold-lo"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+
+        <div class="mt-12 flex flex-col gap-3 sm:flex-row">
+          <a href={mainPhone.tel} class="btn btn-primary">Call {mainPhone.display}</a>
+          <a href={url("/")} class="btn btn-outline">Back to home</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

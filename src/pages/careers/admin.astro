@@ -1,0 +1,46 @@
+---
+/**
+ * /careers/admin — applicant and message dashboard.
+ *
+ * NOT LINKED FROM ANYWHERE in the site navigation. noindex here, disallowed in
+ * robots.txt, excluded from the sitemap.
+ *
+ * Access control is Cloudflare Access, configured in the dashboard, not in
+ * code — see DEPLOYMENT.md. Nothing on this page is a security boundary; the
+ * API endpoints it calls each verify the Access JWT independently, so even a
+ * cached copy of this HTML reveals no data.
+ */
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Eyebrow from "@/components/Eyebrow.astro";
+import AdminDashboard from "@/components/AdminDashboard";
+import roleData from "@/data/roles.json";
+
+const positions = roleData.roles.map((role) => ({ slug: role.slug, title: role.title }));
+---
+
+<BaseLayout
+  title="Applicant dashboard"
+  description="Internal applicant and message dashboard for Spartan Shield Insurance. Access is restricted to the agency owners and this page is not indexed by search."
+  noindex={true}
+  hideCallBar={true}
+>
+  <Fragment slot="head">
+    <meta name="googlebot" content="noindex, nofollow" />
+  </Fragment>
+
+  <section class="section-y-sm bg-parchment">
+    <div class="container-site">
+      <Eyebrow tone="on-light">Internal</Eyebrow>
+      <h1 class="type-h2 mt-4 text-on-light">Applications and messages</h1>
+      <p class="type-body mt-3 max-w-2xl text-on-light-mu">
+        Signed in through Cloudflare Access. This page is not linked from the site and is
+        excluded from search engines. Applicant and consent records contain personal
+        information — do not forward exports outside the agency.
+      </p>
+
+      <div class="mt-10">
+        <AdminDashboard positions={positions} client:load />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

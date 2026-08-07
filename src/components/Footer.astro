@@ -1,0 +1,147 @@
+---
+/**
+ * Global footer — spec 5.8.
+ *
+ * Four columns collapsing to one on mobile. Column 4 and the bottom bar carry
+ * compliance-load-bearing text: the STOP/HELP line (CR4003, CR4004) and the
+ * trade name declaration (CR4002). Do not remove either.
+ */
+import {
+  nav,
+  legalNav,
+  leaders,
+  mainPhone,
+  address,
+  hours,
+  tagline,
+  brandName,
+  footerDisclosure,
+  url,
+} from "@/data/site";
+import Logo from "./Logo.astro";
+import MeanderRule from "./MeanderRule.astro";
+---
+
+<footer class="bg-ink text-on-dark">
+  <MeanderRule variant="full" class="text-gold/25" />
+
+  <div class="container-site">
+    <div class="grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-4 lg:gap-8 lg:py-20">
+      <!-- Column 1: identity -->
+      <div>
+        <div class="flex items-center gap-3">
+          <Logo size={32} class="text-gold" />
+          <span class="flex flex-col leading-none">
+            <span class="font-display text-base uppercase leading-none tracking-[0.09em]"
+              >Spartan Shield</span
+            >
+            <span
+              class="mt-[3px] text-[0.625rem] font-medium uppercase leading-none tracking-[0.2em] text-on-dark-mu"
+              >Insurance</span
+            >
+          </span>
+        </div>
+
+        <p class="type-small mt-5 text-on-dark-mu">{tagline}</p>
+
+        <address class="type-small mt-5 not-italic text-on-dark-mu">
+          {address.street}<br />
+          {address.suite}<br />
+          {address.city}, {address.state} {address.zip}
+        </address>
+
+        <p class="type-small mt-4 text-on-dark-mu">{hours.display}</p>
+      </div>
+
+      <!-- Column 2: navigation -->
+      <div>
+        <h2 class="type-eyebrow text-gold">Site</h2>
+        <ul class="mt-5 flex flex-col gap-3">
+          {
+            nav.map((item) => (
+              <li>
+                <a
+                  href={url(item.href)}
+                  class="flex min-h-[32px] items-center text-[0.9375rem] text-on-dark no-underline transition-colors duration-150 hover:text-gold-lo"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <!-- Column 3: the owners -->
+      <div>
+        <h2 class="type-eyebrow text-gold">Talk to an owner</h2>
+        <ul class="mt-5 flex flex-col gap-5">
+          {
+            leaders.map((leader) => (
+              <li>
+                <p class="font-display text-[0.9375rem] uppercase tracking-[0.06em] text-on-dark">
+                  {leader.name}
+                </p>
+                <a
+                  href={leader.phone.tel}
+                  class="type-small flex min-h-[32px] items-center text-on-dark-mu no-underline transition-colors duration-150 hover:text-gold-lo"
+                >
+                  {leader.phone.display}
+                </a>
+                <a
+                  href={`mailto:${leader.email}`}
+                  class="type-small flex min-h-[32px] items-center break-all text-on-dark-mu no-underline transition-colors duration-150 hover:text-gold-lo"
+                >
+                  {leader.email}
+                </a>
+              </li>
+            ))
+          }
+          <li>
+            <p class="font-display text-[0.9375rem] uppercase tracking-[0.06em] text-on-dark">
+              Main line
+            </p>
+            <a
+              href={mainPhone.tel}
+              class="type-small flex min-h-[32px] items-center text-on-dark-mu no-underline transition-colors duration-150 hover:text-gold-lo"
+            >
+              {mainPhone.display}
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Column 4: legal + SMS compliance -->
+      <div>
+        <h2 class="type-eyebrow text-gold">Legal</h2>
+        <ul class="mt-5 flex flex-col gap-3">
+          {
+            legalNav.map((item) => (
+              <li>
+                <a
+                  href={url(item.href)}
+                  class="flex min-h-[32px] items-center text-[0.9375rem] text-on-dark no-underline transition-colors duration-150 hover:text-gold-lo"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+
+        {/* CR4003 / CR4004: STOP and HELP instructions on every page. */}
+        <p class="type-small mt-6 border-l-2 border-gold/50 pl-4 text-on-dark-mu">
+          Text STOP to opt out of messages. Text HELP for help.
+        </p>
+      </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="border-t border-slate/40 py-8">
+      <p class="type-small mx-auto max-w-4xl text-center text-on-dark-mu">
+        {footerDisclosure}
+      </p>
+      <p class="sr-only">{brandName}</p>
+    </div>
+  </div>
+</footer>

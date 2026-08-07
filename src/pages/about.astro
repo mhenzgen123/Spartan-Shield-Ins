@@ -1,0 +1,177 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Eyebrow from "@/components/Eyebrow.astro";
+import MeanderRule from "@/components/MeanderRule.astro";
+import ClosingCta from "@/components/ClosingCta.astro";
+import {
+  address,
+  hours,
+  leaders,
+  mainPhone,
+  google,
+  licensedStatesSentence,
+  url,
+} from "@/data/site";
+
+const principles = [
+  {
+    title: "You get an owner.",
+    body: "Both founders carry a direct line and answer it. There is no service tier you get routed into after you sign.",
+  },
+  {
+    title: "We re-shop at renewal.",
+    body: "Carriers raise rates on customers who do not shop. We shop for you before the renewal notice arrives, not after you call about it.",
+  },
+  {
+    title: "We explain the coverage, not just the price.",
+    body: "The cheapest policy is only the best policy if you know what it does not cover.",
+  },
+];
+---
+
+<BaseLayout
+  title="About Us"
+  description="Spartan Shield Insurance is an independent property and casualty agency in Louisville, KY. Nine carrier appointments. We work for you, not a carrier."
+>
+  <section class="section-y bg-parchment" aria-labelledby="about-heading">
+    <div class="container-site">
+      <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
+        <!-- Main column -->
+        <div class="lg:col-span-7">
+          <Eyebrow tone="on-light">About the agency</Eyebrow>
+          <h1 id="about-heading" class="type-h1 mt-6 text-on-light">
+            We work for you, not for a carrier.
+          </h1>
+
+          <div class="mt-8 space-y-6">
+            <p class="type-body text-on-light-mu">
+              Spartan Shield Insurance was founded by Nick Henzgen and Sam Genuis on a
+              straightforward idea: the person selling you a policy should not be paid to steer
+              you toward one company's product.
+            </p>
+            <p class="type-body text-on-light-mu">
+              As an independent agency we hold appointments with nine carriers. When you call, we
+              run your risk through all of them and tell you what came back, including when the
+              answer is that your current policy is already the best one available. That happens
+              more often than you would expect, and saying so is how the relationship survives
+              past the first renewal.
+            </p>
+            <p class="type-body text-on-light-mu">
+              We write personal auto, home, renters, and commercial coverage across {
+                licensedStatesSentence
+              }, out of an office in Louisville.
+            </p>
+          </div>
+
+          <MeanderRule variant="center" width={140} class="mt-12 max-w-lg text-oxblood/40" />
+
+          <h2 class="type-h3 mt-12 text-on-light">What that looks like in practice</h2>
+
+          <ul class="mt-6 space-y-6">
+            {
+              principles.map((item) => (
+                <li class="border-l-2 border-oxblood/30 pl-5">
+                  <p class="type-body font-semibold text-on-light">{item.title}</p>
+                  <p class="type-body mt-1 text-on-light-mu">{item.body}</p>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <!-- Side panel -->
+        <aside class="lg:col-span-5">
+          <div class="card-light overflow-hidden lg:sticky lg:top-[calc(var(--header-h)+32px)]">
+            <!-- Static map. Deliberately an image, not an iframe: an embed
+                 costs a third-party cookie banner and a large script for a
+                 picture of a building.
+
+                 TO ADD THE REAL MAP: export a static map PNG (Google Static
+                 Maps or Mapbox Static Images, 800x450, greyscale) and save it
+                 to public/map-office.png. -->
+            <a
+              href={google.profileUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="block aspect-[16/9] bg-cream no-underline"
+              aria-label="View Spartan Shield Insurance on Google Maps"
+            >
+              <div
+                class="flex h-full w-full flex-col items-center justify-center gap-2 text-center"
+                data-placeholder="map"
+              >
+                <svg
+                  width="26"
+                  height="26"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="text-oxblood"
+                  aria-hidden="true"
+                >
+                  <path d="M12 22s8-6 8-12a8 8 0 1 0-16 0c0 6 8 12 8 12z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                <span class="type-small font-semibold text-on-light">View on Google Maps</span>
+              </div>
+            </a>
+
+            <div class="p-6 lg:p-7">
+              <h2 class="type-eyebrow text-oxblood">The office</h2>
+
+              <address class="type-body mt-4 not-italic text-on-light-mu">
+                {address.street}<br />
+                {address.suite}<br />
+                {address.city}, {address.state} {address.zip}
+              </address>
+
+              <dl class="mt-6 space-y-5">
+                <div>
+                  <dt class="type-small font-semibold text-on-light">Hours</dt>
+                  <dd class="type-small mt-1 text-on-light-mu">{hours.display}</dd>
+                </div>
+
+                <div>
+                  <dt class="type-small font-semibold text-on-light">Main line</dt>
+                  <dd class="mt-1">
+                    <a
+                      href={mainPhone.tel}
+                      class="text-[1.0625rem] font-semibold tabular-nums text-oxblood no-underline transition-colors duration-150 hover:text-oxblood-lo"
+                    >
+                      {mainPhone.display}
+                    </a>
+                  </dd>
+                </div>
+
+                {
+                  leaders.map((leader) => (
+                    <div>
+                      <dt class="type-small font-semibold text-on-light">
+                        {leader.name} · direct
+                      </dt>
+                      <dd class="mt-1">
+                        <a
+                          href={leader.phone.tel}
+                          class="text-[1.0625rem] font-semibold tabular-nums text-oxblood no-underline transition-colors duration-150 hover:text-oxblood-lo"
+                        >
+                          {leader.phone.display}
+                        </a>
+                      </dd>
+                    </div>
+                  ))
+                }
+              </dl>
+
+              <a href={url("/contact")} class="btn btn-primary btn-full mt-7">Contact us</a>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <ClosingCta />
+</BaseLayout>

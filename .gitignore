@@ -1,0 +1,23 @@
+# Build output
+dist/
+.astro/
+
+# Dependencies
+node_modules/
+
+# Secrets — never commit these
+.env
+.env.*
+!.env.example
+.dev.vars
+
+# Cloudflare / Wrangler local state
+.wrangler/
+
+# Editor and OS noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+npm-debug.log*

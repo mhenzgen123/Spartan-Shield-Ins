@@ -1,0 +1,102 @@
+---
+/**
+ * Open role card — spec 5.5.
+ *
+ * Carries JobPosting JSON-LD (spec 10). baseSalary is omitted deliberately
+ * because no ranges are published; emitting a fabricated range would be both
+ * a lie and a Google structured-data violation.
+ */
+import { address, siteUrl, legalName, brandName, hours, url } from "@/data/site";
+
+export interface Role {
+  slug: string;
+  title: string;
+  type: string;
+  location: string;
+  discipline: string;
+  summary: string[];
+}
+
+interface Props {
+  role: Role;
+  /** Emit the JobPosting JSON-LD alongside the card. */
+  schema?: boolean;
+  /** ISO date the posting went live. */
+  datePosted?: string;
+}
+
+const { role, schema = true, datePosted = "2026-08-07" } = Astro.props;
+
+const jobPosting = {
+  "@context": "https://schema.org",
+  "@type": "JobPosting",
+  title: role.title,
+  description: role.summary.join(" "),
+  identifier: {
+    "@type": "PropertyValue",
+    name: brandName,
+    value: role.slug,
+  },
+  datePosted,
+  employmentType: "FULL_TIME",
+  hiringOrganization: {
+    "@type": "Organization",
+    name: legalName,
+    alternateName: brandName,
+    sameAs: siteUrl,
+  },
+  jobLocationType: "TELECOMMUTE_HYBRID",
+  jobLocation: {
+    "@type": "Place",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: `${address.street}, ${address.suite}`,
+      addressLocality: address.city,
+      addressRegion: address.state,
+      postalCode: address.zip,
+      addressCountry: address.country,
+    },
+  },
+  applicantLocationRequirements: {
+    "@type": "Country",
+    name: "USA",
+  },
+  directApply: true,
+  url: `${siteUrl}/hiring/apply?role=${role.slug}`,
+  industry: "Insurance",
+  occupationalCategory: role.discipline,
+  workHours: hours.short,
+};
+---
+
+<article class="card-light flex flex-col p-6 lg:p-8">
+  <h3 class="type-h3 text-on-light">{role.title}</h3>
+
+  <ul class="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1">
+    {
+      [role.type, role.location, role.discipline].map((meta) => (
+        <li class="type-small text-on-light-mu after:ml-2 after:text-on-light-mu/50 after:content-['·'] last:after:content-['']">
+          {meta}
+        </li>
+      ))
+    }
+  </ul>
+
+  <div class="mt-5 grow space-y-4">
+    {role.summary.map((paragraph) => <p class="type-body text-on-light-mu">{paragraph}</p>)}
+  </div>
+
+  <a href={url(`/hiring/apply?role=${role.slug}`)} class="btn btn-primary mt-7 self-start">
+    Apply for this role
+  </a>
+</article>
+
+{
+  schema && (
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(jobPosting)}
+    />
+  )
+}

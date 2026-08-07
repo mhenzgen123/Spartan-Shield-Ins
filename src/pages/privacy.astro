@@ -1,0 +1,223 @@
+---
+/**
+ * Privacy Policy — spec 6.4.
+ *
+ * The "Text messaging and mobile information" section is VERBATIM from the
+ * spec. TCR reviewers look for that exact no-sharing language. Do not
+ * paraphrase, shorten, or "improve" it.
+ *
+ * Flagged for the client: this policy was drafted to carrier and TCR
+ * requirements by a non-lawyer. Have counsel or the E&O carrier review it
+ * before launch.
+ */
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Eyebrow from "@/components/Eyebrow.astro";
+import {
+  legalName,
+  brandName,
+  tradeNameDeclaration,
+  address,
+  mainPhone,
+  primaryEmail,
+  leaders,
+  hours,
+  legalLastUpdated,
+  url,
+} from "@/data/site";
+
+const sections = [
+  { id: "who-we-are", label: "Who we are" },
+  { id: "information-we-collect", label: "Information we collect" },
+  { id: "how-we-use-it", label: "How we use it" },
+  { id: "text-messaging", label: "Text messaging and mobile information" },
+  { id: "sharing-with-carriers", label: "Sharing with carriers" },
+  { id: "data-retention", label: "Data retention" },
+  { id: "your-choices", label: "Your choices" },
+  { id: "security", label: "Security" },
+  { id: "children", label: "Children" },
+  { id: "changes", label: "Changes" },
+  { id: "contact", label: "Contact" },
+];
+---
+
+<BaseLayout
+  title="Privacy Policy"
+  description="How Spartan Shield Insurance collects, uses, and protects your information, including our text messaging and mobile information policy. Louisville, Kentucky."
+>
+  <section class="section-y bg-parchment">
+    <div class="container-site">
+      <div class="max-w-3xl">
+        <Eyebrow tone="on-light">Legal</Eyebrow>
+        <h1 class="type-h1 mt-6 text-on-light">Privacy Policy</h1>
+        <p class="type-small mt-4 text-on-light-mu">Last updated: {legalLastUpdated}</p>
+
+        <nav aria-label="On this page" class="mt-10 rounded-[8px] border border-on-light-mu/25 p-5">
+          <h2 class="type-eyebrow text-oxblood">On this page</h2>
+          <ol class="mt-4 grid gap-2 sm:grid-cols-2">
+            {
+              sections.map((section, index) => (
+                <li>
+                  <a
+                    href={`#${section.id}`}
+                    class="type-small text-on-light-mu underline-offset-2 hover:text-oxblood hover:underline"
+                  >
+                    {index + 1}. {section.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ol>
+        </nav>
+
+        <div class="legal-prose mt-12">
+          <h2 id="who-we-are">1. Who we are</h2>
+          <p>
+            {brandName} is an independent property and casualty insurance agency. {
+              tradeNameDeclaration
+            }
+          </p>
+          <p>
+            {address.street}, {address.suite}<br />
+            {address.city}, {address.state} {address.zip}<br />
+            Phone: <a href={mainPhone.tel}>{mainPhone.display}</a><br />
+            Email: <a href={`mailto:${primaryEmail}`}>{primaryEmail}</a>
+          </p>
+          <p>
+            This policy explains what we collect, why we collect it, and what we do and do not do
+            with it. It applies to this website and to the ways we communicate with you.
+          </p>
+
+          <h2 id="information-we-collect">2. Information we collect</h2>
+          <p>Information you give us directly:</p>
+          <ul>
+            <li>Name, email address, phone number, and mailing address</li>
+            <li>Anything you choose to include in a message, form, or email to us</li>
+            <li>
+              For insurance quoting, information such as vehicle details, property details,
+              driving history, and prior coverage
+            </li>
+            <li>
+              If you apply for a job with us: your resume, employment history, licensing status,
+              and any other information you submit with an application
+            </li>
+          </ul>
+          <p>Information collected automatically when you visit this site:</p>
+          <ul>
+            <li>IP address</li>
+            <li>Browser type and version</li>
+            <li>Device type</li>
+            <li>Pages visited on this site</li>
+          </ul>
+
+          <h2 id="how-we-use-it">3. How we use it</h2>
+          <p>We use the information described above to:</p>
+          <ul>
+            <li>Respond to your inquiries</li>
+            <li>Prepare and present insurance quotes</li>
+            <li>Service and renew policies</li>
+            <li>Assist with claims</li>
+            <li>Communicate with you by phone, email, and text where you have consented</li>
+            <li>Meet our legal and regulatory obligations</li>
+          </ul>
+
+          <h2 id="text-messaging">4. Text messaging and mobile information</h2>
+
+          <div class="legal-callout">
+            <p>
+              <strong>
+                No mobile information will be shared with third parties or affiliates for
+                marketing or promotional purposes.
+              </strong>{" "}
+              All other categories of information sharing exclude text messaging originator
+              opt-in data and consent; this information will not be shared with any third
+              parties.
+            </p>
+            <p>
+              We may share information with subcontractors who provide support services to us,
+              such as customer service platforms and our telephony provider, solely to deliver
+              the services you requested. These parties are not permitted to use your mobile
+              information for their own marketing.
+            </p>
+            <p>
+              You may opt out of text messages at any time by replying STOP to any message. Reply
+              HELP for help, or contact us at {mainPhone.display} or {primaryEmail}. Opt-out
+              requests are processed within 24 hours. Message frequency varies for service
+              messages and is limited to 6 messages per month for marketing messages. Message and
+              data rates may apply. Carriers are not liable for delayed or undelivered messages.
+            </p>
+            <p>You must be at least 18 years old to consent to receive text messages from us.</p>
+          </div>
+
+          <p>
+            Full details of our text messaging programs are set out in our{" "}
+            <a href={url("/sms-terms")}>SMS Terms and Conditions</a>.
+          </p>
+
+          <h2 id="sharing-with-carriers">5. Sharing with carriers</h2>
+          <p>
+            To obtain quotes and place coverage, we share the information necessary to underwrite
+            with the insurance carriers we represent. This is separate from and does not include
+            your text message opt-in.
+          </p>
+
+          <h2 id="data-retention">6. Data retention</h2>
+          <p>
+            Inquiry and consent records are retained for at least four years, consistent with
+            recordkeeping obligations and the applicable statute of limitations. Applicant records
+            are retained for one year.
+          </p>
+
+          <h2 id="your-choices">7. Your choices</h2>
+          <p>
+            You may request access to the personal information we hold about you, ask us to
+            correct it, or ask us to delete it. You may opt out of marketing communications at any
+            time — reply STOP to any text message, use the unsubscribe link in an email, or
+            contact us using the details in Section 11. Opting out of marketing does not stop
+            service messages about a policy you hold.
+          </p>
+
+          <h2 id="security">8. Security</h2>
+          <p>
+            We maintain reasonable administrative and technical safeguards designed to protect the
+            information we hold. No method of transmission or storage is completely secure, and we
+            cannot guarantee absolute security.
+          </p>
+
+          <h2 id="children">9. Children</h2>
+          <p>
+            This site and our services are not directed to anyone under 18, and we do not
+            knowingly collect personal information from anyone under 18.
+          </p>
+
+          <h2 id="changes">10. Changes</h2>
+          <p>
+            We may update this policy. When we do, we will revise the "Last updated" date at the
+            top of this page. Material changes will be reflected here before they take effect.
+          </p>
+
+          <h2 id="contact">11. Contact</h2>
+          <p>
+            {legalName}<br />
+            {brandName}<br />
+            {address.street}, {address.suite}<br />
+            {address.city}, {address.state} {address.zip}
+          </p>
+          <p>
+            Main line: <a href={mainPhone.tel}>{mainPhone.display}</a><br />
+            {
+              leaders.map((leader) => (
+                <>
+                  {leader.name}: <a href={leader.phone.tel}>{leader.phone.display}</a> ·{" "}
+                  <a href={`mailto:${leader.email}`}>{leader.email}</a>
+                  <br />
+                </>
+              ))
+            }
+            Hours: {hours.display}
+          </p>
+          <p>{tradeNameDeclaration}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

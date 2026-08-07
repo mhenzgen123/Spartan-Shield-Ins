@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# The applicant dashboard holds PII. It is protected by Cloudflare Access, but
+# it must never be crawled or indexed either.
+Disallow: /careers/admin
+Disallow: /api/
+
+Sitemap: https://spartanshieldins.com/sitemap-index.xml

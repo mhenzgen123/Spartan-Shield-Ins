@@ -1,0 +1,27 @@
+{
+  "_INSTRUCTIONS_FOR_SAM": [
+    "REVIEW TEXT IS NOT WRITTEN BY THE BUILD. These are the reviewers' own words.",
+    "Paraphrasing or inventing them is dishonest and violates Google's policies.",
+    "",
+    "To fill these in:",
+    "  1. Open https://search.google.com/local/reviews?placeid=ChIJEzz86mihaYgRCj_GWKP4-F4",
+    "  2. Copy each review's text VERBATIM into the matching 'text' field below.",
+    "  3. Confirm the reviewer's name matches exactly as it appears on their profile.",
+    "  4. Set 'stars' to that reviewer's actual rating.",
+    "  5. Delete any entry you do not want shown, or add more in the same shape.",
+    "",
+    "Any entry left with an empty 'text' is skipped at build time and will not",
+    "render, so the site never displays a blank review card.",
+    "",
+    "The names below were confirmed present on the profile in August 2026. Other",
+    "names seen there: Christina Garbus, Jessica Long."
+  ],
+  "reviews": [
+    { "name": "Brittany McCormick", "stars": 5, "text": "", "source": "Google" },
+    { "name": "Tami Marion", "stars": 5, "text": "", "source": "Google" },
+    { "name": "Alex Poulin", "stars": 5, "text": "", "source": "Google" },
+    { "name": "Wyatt Hubble", "stars": 5, "text": "", "source": "Google" },
+    { "name": "Connor Andrews", "stars": 5, "text": "", "source": "Google" },
+    { "name": "Christina Garbus", "stars": 5, "text": "", "source": "Google" }
+  ]
+}

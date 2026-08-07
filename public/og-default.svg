@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <pattern id="meander" width="24" height="16" patternUnits="userSpaceOnUse">
+      <path d="M0 15 L0 1 L20 1 L20 11 L8 11 L8 5 L16 5 L16 15 L24 15" stroke="#C8A96B" stroke-width="1.5" fill="none" stroke-linecap="square"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="630" fill="#16130F"/>
+
+  <!-- Meander watermark, top right, mirroring the hero treatment -->
+  <g opacity="0.05" transform="translate(880,-60) rotate(-12)">
+    <g fill="url(#meander)">
+      <rect width="480" height="16"/>
+      <rect width="480" height="16" transform="translate(480,0) rotate(90)"/>
+      <rect width="480" height="16" transform="translate(480,480) rotate(180)"/>
+      <rect width="480" height="16" transform="translate(0,480) rotate(270)"/>
+    </g>
+  </g>
+
+  <g transform="translate(80,96)">
+    
+    <g transform="scale(0.64)">
+      <circle cx="50" cy="50" r="46" stroke="#C8A96B" stroke-width="4" fill="none"/>
+      <circle cx="50" cy="50" r="38" stroke="#C8A96B" stroke-width="2" fill="none" opacity="0.5"/>
+      <path d="M50 24 L79 53 L67 53 L50 36 L33 53 L21 53 Z" fill="#C8A96B"/>
+      <path d="M50 50 L74 74 L62 74 L50 62 L38 74 L26 74 Z" fill="#C8A96B"/>
+    </g>
+  </g>
+
+  <text x="164" y="128" fill="#F5F2EC" font-family="Georgia, 'Times New Roman', serif"
+        font-size="34" letter-spacing="3.5">SPARTAN SHIELD</text>
+  <text x="166" y="158" fill="#A79E92" font-family="Helvetica, Arial, sans-serif"
+        font-size="16" font-weight="500" letter-spacing="4.2">INSURANCE</text>
+
+  <text x="80" y="330" fill="#F5F2EC" font-family="Helvetica, Arial, sans-serif"
+        font-size="82" font-weight="bold" letter-spacing="-2.2">Nine carriers.</text>
+  <text x="80" y="424" fill="#F5F2EC" font-family="Helvetica, Arial, sans-serif"
+        font-size="82" font-weight="bold" letter-spacing="-2.2">One phone call.</text>
+
+  <rect x="80" y="470" width="220" height="16" fill="url(#meander)" opacity="0.75"/>
+
+  <text x="80" y="546" fill="#C8A96B" font-family="Helvetica, Arial, sans-serif"
+        font-size="44" font-weight="bold" letter-spacing="-1.2">(502) 308-4382</text>
+
+  <text x="80" y="586" fill="#A79E92" font-family="Helvetica, Arial, sans-serif"
+        font-size="19">Independent insurance brokers · Louisville, Kentucky</text>
+</svg>
