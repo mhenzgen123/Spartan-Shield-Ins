@@ -9,7 +9,7 @@
  * (spec 3.2). It is a plain script, not an island — no framework needed for a
  * toggle.
  */
-import { nav, mainPhone, brandName, url } from "@/data/site";
+import { nav, mainPhone, url } from "@/data/site";
 import Logo from "./Logo.astro";
 
 const { pathname } = Astro.url;
@@ -26,11 +26,13 @@ function isCurrent(href: string) {
   <div class="container-site">
     <div class="flex h-[60px] items-center justify-between gap-4 lg:h-[72px]">
       <!-- Wordmark -->
-      <a
-        href={url("/")}
-        class="flex items-center gap-3 no-underline"
-        aria-label={`${brandName} — home`}
-      >
+      {/*
+        No aria-label here on purpose. The visible wordmark already names the
+        link, and an aria-label that does not start with the visible text
+        fails WCAG 2.5.3 (Label in Name) — a speech-input user saying
+        "Spartan Shield" would not match "Spartan Shield Insurance — home".
+      */}
+      <a href={url("/")} class="flex items-center gap-3 no-underline">
         <Logo size={34} class="text-gold" />
         <span class="flex flex-col leading-none">
           <span

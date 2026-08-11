@@ -87,17 +87,29 @@ export const tagline = "Independent insurance brokers. Louisville, Kentucky.";
 
 export const mainPhone = phone("5023084382");
 
+/**
+ * Office address. Updated August 2026 — the agency moved from 1400 Envoy
+ * Circle (Suite 1408, 40299) to Townepark Circle.
+ *
+ * NOTE: `geo` is intentionally absent. The old coordinates belonged to the
+ * Envoy Circle address and would now be wrong, and guessing at replacements
+ * would put a false location in the structured data and on Google. Get the
+ * real ones from the Google Business Profile (or right-click the pin in Google
+ * Maps → the first number is latitude), add them back here, and the
+ * InsuranceAgency JSON-LD will start emitting a `geo` block again
+ * automatically.
+ */
 export const address = {
-  street: "1400 Envoy Circle",
-  suite: "Suite 1408",
+  street: "209 Townepark Cir",
+  suite: "Ste 100",
   city: "Louisville",
   state: "KY",
   stateName: "Kentucky",
-  zip: "40299",
+  zip: "40243",
   country: "US",
-  /** 1400 Envoy Circle, Suite 1408, Louisville, KY 40299 */
-  oneLine: "1400 Envoy Circle, Suite 1408, Louisville, KY 40299",
-  geo: { latitude: 38.2157, longitude: -85.5774 },
+  /** 209 Townepark Cir, Ste 100, Louisville, KY 40243 */
+  oneLine: "209 Townepark Cir, Ste 100, Louisville, KY 40243",
+  geo: null as { latitude: number; longitude: number } | null,
 } as const;
 
 export const hours = {

@@ -13,7 +13,6 @@ import PhoneDisplay from "@/components/PhoneDisplay.astro";
 import ContactForm from "@/components/ContactForm";
 import {
   mainPhone,
-  leaders,
   address,
   hours,
   siteUrl,
@@ -72,10 +71,6 @@ const contactSchema = {
           <h1 id="contact-heading" class="type-h1 mt-5 text-on-light">
             The fastest way to reach us is to call.
           </h1>
-          <p class="type-body mt-5 max-w-lg text-on-light-mu">
-            You will reach Sam or Nick, not a queue. If it is easier to write, the form goes to
-            both of us.
-          </p>
 
           <PhoneDisplay
             phone={mainPhone}
@@ -87,33 +82,7 @@ const contactSchema = {
             class="mt-10"
           />
 
-          <div class="mt-12 grid gap-6 sm:grid-cols-2">
-            {
-              leaders.map((leader) => (
-                <div class="card-light p-6">
-                  <p class="font-display text-[1.0625rem] uppercase tracking-[0.06em] text-on-light">
-                    {leader.name}
-                  </p>
-                  <p class="type-small mt-1 text-on-light-mu">{leader.title}</p>
-
-                  <a
-                    href={leader.phone.tel}
-                    class="mt-4 block text-[1.0625rem] font-semibold tabular-nums text-oxblood no-underline transition-colors duration-150 hover:text-oxblood-lo"
-                  >
-                    {leader.phone.display}
-                  </a>
-                  <a
-                    href={`mailto:${leader.email}`}
-                    class="type-small mt-1 block break-all text-on-light-mu no-underline underline-offset-2 transition-colors duration-150 hover:text-oxblood hover:underline"
-                  >
-                    {leader.email}
-                  </a>
-                </div>
-              ))
-            }
-          </div>
-
-          <dl class="mt-10 space-y-6">
+          <dl class="mt-12 space-y-6">
             <div>
               <dt class="type-eyebrow text-oxblood">Office</dt>
               <dd class="type-body mt-2 text-on-light-mu">

@@ -210,33 +210,36 @@ it that way.
 These render as visible, labelled placeholders rather than fake content. Each
 one appears automatically once the real asset lands — no code change needed.
 
-### Carrier logos → `public/carriers/`
+### Headshots → `public/team/` — DONE
 
-Nine files, named per `src/data/carriers.json`:
-`progressive.svg`, `geico.svg`, `liberty-mutual.svg`, `safeco.svg`,
-`travelers.svg`, `the-hartford.svg`, `national-general.svg`, `openly.svg`,
-`grange.svg`
+Supplied by the client on 2026-08-11. 750x900 portraits, served as `.webp`
+with a `.jpg` fallback. The cards use a 5:6 frame, which is exactly 750:900, so
+the photos fill it with no cropping at all.
 
-Pull each one from that carrier's **agent portal brand kit**. Do not download
-them from the open web — portal versions are the approved ones, and appointment
-agreements generally require using them unmodified. The grid renders them full
-colour on white cards and applies no filters, which is intentional.
+To replace one, drop in a new `<slug>-750.jpg` (and optionally `-750.webp`) at
+the same 5:6 ratio. If the `.jpg` is missing the card falls back to a monogram
+placeholder rather than a broken image.
 
-The build prints a warning listing how many are still placeholders.
+### Carrier logos → `public/carriers/` — DONE
 
-### Review text → `src/data/reviews.json`
+Eleven logos supplied by the client on 2026-08-11 and rendering in the
+homepage carousel: Travelers, Liberty Mutual, Chubb, Nationwide, Progressive,
+Geico, Safeco, National General, The Hartford, Openly, Grange.
 
-Reviewer names are already in place. **The text must be pasted verbatim from the
-Google Business Profile.** Reviews are the reviewers' words; paraphrasing or
-inventing them is dishonest and violates Google's policies. Entries with empty
-text are skipped at build time, so nothing blank ever renders.
+They were trimmed of surrounding white padding so each mark renders at a usable
+size. The artwork itself is untouched — no recolour, no crop into the mark, no
+filters — which is what appointment agreements require.
 
-### Headshots → `public/team/`
+To add or remove one: drop the file in `public/carriers/` and edit
+`src/data/carriers.json`. The build warns about any entry whose file is missing
+and skips it rather than rendering a broken image.
 
-For each of `sam-genuis` and `nick-henzgen`, four files:
-`<slug>-500.webp`, `<slug>-1000.webp`, `<slug>-500.jpg`, `<slug>-1000.jpg`
+### Review text → `src/data/reviews.json` — DONE
 
-Square crop. Until they exist, the cards show a monogram.
+Three reviews supplied by the client, transcribed verbatim from the Google
+Business Profile. **Do not reword them** — paraphrasing a review is dishonest
+and violates Google's policies. To swap one out, replace the whole entry.
+Bylines are first name + last initial, set per entry via `display`.
 
 ### Office map → `public/map-office.png`
 

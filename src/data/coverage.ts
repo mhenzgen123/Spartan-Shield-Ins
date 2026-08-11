@@ -1,11 +1,15 @@
 /**
- * Lines of business shown on the homepage coverage grid — spec 5.2.
+ * Lines of business shown on the homepage coverage grid.
+ *
+ * The Business/commercial tile was removed from the homepage at the client's
+ * request (2026-08-11). The agency still writes commercial lines — this is a
+ * homepage emphasis decision, not a change to what they sell.
  *
  * Every card ends in a `tel:` link, never a quote-form link. The strategy is
  * inbound calls to the owners, not form-filled leads in a queue.
  */
 
-export type CoverageIcon = "auto" | "home" | "renters" | "business";
+export type CoverageIcon = "auto" | "home" | "renters";
 
 export interface Coverage {
   slug: string;
@@ -37,12 +41,5 @@ export const coverage: Coverage[] = [
     icon: "renters",
     body: "Cheap, fast, and usually bundled with your auto for a discount that covers most of the premium.",
     callLabel: "renters",
-  },
-  {
-    slug: "business",
-    title: "Business",
-    icon: "business",
-    body: "General liability, commercial property, commercial auto, workers comp, BOPs. Small and mid-size Kentucky businesses.",
-    callLabel: "business",
   },
 ];

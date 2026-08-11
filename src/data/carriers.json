@@ -1,11 +1,13 @@
 [
-  { "name": "Progressive", "file": "progressive.svg" },
-  { "name": "Geico", "file": "geico.svg" },
-  { "name": "Liberty Mutual", "file": "liberty-mutual.svg" },
-  { "name": "Safeco", "file": "safeco.svg" },
-  { "name": "Travelers", "file": "travelers.svg" },
-  { "name": "The Hartford", "file": "the-hartford.svg" },
-  { "name": "National General", "file": "national-general.svg" },
-  { "name": "Openly", "file": "openly.svg" },
-  { "name": "Grange", "file": "grange.svg" }
+  { "name": "Travelers", "file": "travelers.png" },
+  { "name": "Liberty Mutual", "file": "liberty-mutual.png" },
+  { "name": "Chubb", "file": "chubb.png" },
+  { "name": "Nationwide", "file": "nationwide.png" },
+  { "name": "Progressive", "file": "progressive.png" },
+  { "name": "Geico", "file": "geico.png" },
+  { "name": "Safeco", "file": "safeco.png" },
+  { "name": "National General", "file": "national-general.png" },
+  { "name": "The Hartford", "file": "the-hartford.png" },
+  { "name": "Openly", "file": "openly.png" },
+  { "name": "Grange", "file": "grange.png" }
 ]

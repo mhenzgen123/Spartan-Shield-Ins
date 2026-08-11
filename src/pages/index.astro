@@ -4,7 +4,7 @@ import PhoneDisplay from "@/components/PhoneDisplay.astro";
 import MeanderWatermark from "@/components/MeanderWatermark.astro";
 import Eyebrow from "@/components/Eyebrow.astro";
 import CoverageCard from "@/components/CoverageCard.astro";
-import CarrierGrid from "@/components/CarrierGrid.astro";
+import CarrierCarousel from "@/components/CarrierCarousel.astro";
 import ReviewCard from "@/components/ReviewCard.astro";
 import ClosingCta from "@/components/ClosingCta.astro";
 import { coverage } from "@/data/coverage";
@@ -47,11 +47,16 @@ const organization = {
     postalCode: address.zip,
     addressCountry: address.country,
   },
-  geo: {
-    "@type": "GeoCoordinates",
-    latitude: address.geo.latitude,
-    longitude: address.geo.longitude,
-  },
+  // Only emitted once real coordinates for the new address are in site.ts.
+  ...(address.geo
+    ? {
+        geo: {
+          "@type": "GeoCoordinates",
+          latitude: address.geo.latitude,
+          longitude: address.geo.longitude,
+        },
+      }
+    : {}),
   openingHoursSpecification: [
     {
       "@type": "OpeningHoursSpecification",
@@ -92,7 +97,7 @@ const website = {
 <BaseLayout
   title="Independent Insurance Agency in Louisville, KY | Spartan Shield Insurance"
   rawTitle={true}
-  description="Independent insurance brokers in Louisville, KY. We shop nine carriers for auto, home, renters, and business coverage across Kentucky, Indiana, and Ohio."
+  description="Independent insurance brokers in Louisville, KY. We shop the market for auto, home, renters, and business coverage across Kentucky, Indiana, and Ohio."
   schema={[organization, website]}
 >
   <!-- ===================================================================
@@ -114,13 +119,12 @@ const website = {
         <Eyebrow>Independent insurance brokers · Louisville, Kentucky</Eyebrow>
 
         <h1 id="hero-heading" class="type-h1 mt-6 text-on-dark">
-          Nine carriers. One phone call.
+          One Call<br />Get the Right Coverage at the Right Price.
         </h1>
 
         <p class="type-body mt-6 max-w-xl text-on-dark-mu">
-          We shop Progressive, Travelers, Safeco, The Hartford and six more against each other,
-          then hand you the one that actually fits. No call centers, no hold music. You get an
-          owner.
+          We shop the market to find the right carrier for you, then customize the coverage for
+          your specific needs.
         </p>
 
         <PhoneDisplay
@@ -198,7 +202,11 @@ const website = {
         Personal and commercial coverage, shopped every renewal.
       </h2>
 
-      <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:mt-14 lg:grid-cols-4">
+      {/* Three tiles since the Business card was removed. Capped and centred
+          so they do not stretch to fill a four-column measure. */}
+      <div
+        class="mx-auto mt-12 grid max-w-5xl gap-5 sm:grid-cols-2 lg:mt-14 lg:grid-cols-3"
+      >
         {coverage.map((item) => <CoverageCard item={item} />)}
       </div>
     </div>
@@ -207,18 +215,18 @@ const website = {
   <!-- ===================================================================
        CARRIERS — the one pure-white section
        =================================================================== -->
-  <section class="section-y bg-pure-white" aria-labelledby="carriers-heading">
+  {/* Shorter rhythm than a full section: this band is now just an
+       eyebrow and the logo strip, so full section padding left it floating. */}
+  <section class="section-y-sm bg-pure-white" aria-labelledby="carriers-heading">
     <div class="container-site">
-      <Eyebrow tone="on-light" as="p">Our carriers</Eyebrow>
-      <h2 id="carriers-heading" class="type-h2 mt-4 max-w-2xl text-on-light">
-        Nine appointments, working against each other on your behalf.
-      </h2>
-      <p class="type-body mt-4 max-w-2xl text-on-light-mu">
-        We are appointed with these carriers and shop them against each other on every quote.
-      </p>
+      {/* The eyebrow is the only heading here now — it carries the section's
+          accessible name so the landmark is still labelled. */}
+      <Eyebrow tone="on-light" as="h2" id="carriers-heading">
+        Some of our Carriers
+      </Eyebrow>
 
-      <div class="mt-12 lg:mt-14">
-        <CarrierGrid />
+      <div class="mt-8 lg:mt-10">
+        <CarrierCarousel />
       </div>
     </div>
   </section>
@@ -228,19 +236,18 @@ const website = {
        =================================================================== -->
   <section class="section-y bg-ink" aria-labelledby="reviews-heading">
     <div class="container-site">
-      <Eyebrow>What clients say</Eyebrow>
-      <h2 id="reviews-heading" class="type-h2 mt-4 max-w-2xl text-on-dark">
-        {google.ratingDisplay} stars across {google.reviewCount} Google reviews.
-      </h2>
+      {/* The eyebrow is the section's only heading now, so it carries the
+          accessible name. */}
+      <Eyebrow as="h2" id="reviews-heading">What clients say</Eyebrow>
 
       {
         reviews.length > 0 ? (
           <>
             {/* Scroll-snap rail on mobile, three-column grid on desktop. */}
-            <div class="snap-rail mt-12 lg:hidden">
+            <div class="snap-rail mt-10 lg:hidden">
               {reviews.map((review) => (
                 <ReviewCard
-                  name={review.name}
+                  display={review.display}
                   stars={review.stars}
                   text={review.text}
                   source={review.source}
@@ -248,10 +255,10 @@ const website = {
               ))}
             </div>
 
-            <div class="mt-14 hidden gap-5 lg:grid lg:grid-cols-3">
+            <div class="mt-12 hidden items-stretch gap-5 lg:grid lg:grid-cols-3">
               {reviews.map((review) => (
                 <ReviewCard
-                  name={review.name}
+                  display={review.display}
                   stars={review.stars}
                   text={review.text}
                   source={review.source}

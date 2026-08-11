@@ -1,27 +1,42 @@
 {
   "_INSTRUCTIONS_FOR_SAM": [
-    "REVIEW TEXT IS NOT WRITTEN BY THE BUILD. These are the reviewers' own words.",
-    "Paraphrasing or inventing them is dishonest and violates Google's policies.",
+    "REVIEW TEXT IS THE REVIEWER'S OWN WORDS AND IS PASTED VERBATIM.",
+    "Do not reword, tidy, or shorten it — paraphrasing a review is dishonest",
+    "and violates Google's policies. If a review should not be shown, delete",
+    "the whole entry rather than editing what it says.",
     "",
-    "To fill these in:",
-    "  1. Open https://search.google.com/local/reviews?placeid=ChIJEzz86mihaYgRCj_GWKP4-F4",
-    "  2. Copy each review's text VERBATIM into the matching 'text' field below.",
-    "  3. Confirm the reviewer's name matches exactly as it appears on their profile.",
-    "  4. Set 'stars' to that reviewer's actual rating.",
-    "  5. Delete any entry you do not want shown, or add more in the same shape.",
+    "The three below were supplied by the client on 2026-08-11, transcribed",
+    "from screenshots of the Google Business Profile.",
     "",
-    "Any entry left with an empty 'text' is skipped at build time and will not",
-    "render, so the site never displays a blank review card.",
+    "NOTE on Juanita B.: the original contains a repeated word ('in our our",
+    "needs'). It is preserved exactly as written. Removing it would be editing",
+    "someone else's review. If that bothers you, the options are to drop this",
+    "review or ask her to edit it on Google — not to change it here.",
     "",
-    "The names below were confirmed present on the profile in August 2026. Other",
-    "names seen there: Christina Garbus, Jessica Long."
+    "'display' is the byline shown on the site: first name + last initial.",
+    "Any entry with empty 'text' is skipped at build time."
   ],
   "reviews": [
-    { "name": "Brittany McCormick", "stars": 5, "text": "", "source": "Google" },
-    { "name": "Tami Marion", "stars": 5, "text": "", "source": "Google" },
-    { "name": "Alex Poulin", "stars": 5, "text": "", "source": "Google" },
-    { "name": "Wyatt Hubble", "stars": 5, "text": "", "source": "Google" },
-    { "name": "Connor Andrews", "stars": 5, "text": "", "source": "Google" },
-    { "name": "Christina Garbus", "stars": 5, "text": "", "source": "Google" }
+    {
+      "name": "Clark Spalding",
+      "display": "Clark S.",
+      "stars": 5,
+      "source": "Google",
+      "text": "As a mortgage loan officer, I work with a lot of insurance agents, and Sam is one of the best I've worked with. He's extremely responsive, easy to communicate with, and always takes great care of my clients.\n\nHe consistently finds competitive pricing and has even helped save deals for me by finding insurance options that helped borrowers meet debt-to-income requirements during underwriting.\n\nI highly recommend Sam if you're looking for an insurance agent who is knowledgeable, reliable, and truly goes the extra mile."
+    },
+    {
+      "name": "Wyatt Hubble",
+      "display": "Wyatt H.",
+      "stars": 5,
+      "source": "Google",
+      "text": "As someone who knows nothing about insurance, Nick made everything simple. He explained every detail in a way I could understand and helped me choose the right plan with confidence. Truly excellent service!"
+    },
+    {
+      "name": "Juanita Brooks",
+      "display": "Juanita B.",
+      "stars": 5,
+      "source": "Google",
+      "text": "Very helpful in our our needs. Very polite professional and caring of our situation and quickly and thoroughly got things in order for me and my husband. We so much appreciate what you have accomplished for us. Thank you so much Nick."
+    }
   ]
 }

@@ -1,20 +1,28 @@
 ---
 /**
- * Google review card — spec 5.2.
+ * Google review card.
  *
- * Review text is the reviewer's own words, pasted verbatim by the client into
- * src/data/reviews.json. This component never generates or paraphrases it; an
- * entry with empty text is filtered out upstream and never renders.
+ * Review text is the reviewer's own words, pasted verbatim into
+ * src/data/reviews.json. This component never generates, paraphrases, or
+ * tidies it — it only splits on blank lines so multi-paragraph reviews keep
+ * their shape. An entry with empty text is filtered out upstream.
+ *
+ * The byline is a shortened form (first name + last initial) supplied in the
+ * data file, not derived here, so the client controls exactly how each
+ * reviewer is credited.
  */
 interface Props {
-  name: string;
+  /** Byline as shown on the site, e.g. "Wyatt H." */
+  display: string;
   stars: number;
   text: string;
   source?: string;
 }
 
-const { name, stars, text, source = "Google" } = Astro.props;
+const { display, stars, text, source = "Google" } = Astro.props;
+
 const filled = Math.max(0, Math.min(5, Math.round(stars)));
+const paragraphs = text.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
 ---
 
 <figure class="card-dark flex h-full flex-col p-6 lg:p-7">
@@ -38,13 +46,13 @@ const filled = Math.max(0, Math.min(5, Math.round(stars)));
     }
   </div>
 
-  <blockquote class="type-body mt-5 grow text-on-dark">
-    <p>{text}</p>
+  <blockquote class="mt-5 grow space-y-4">
+    {paragraphs.map((paragraph) => <p class="type-body text-on-dark">{paragraph}</p>)}
   </blockquote>
 
   <figcaption class="mt-6 border-t border-slate/50 pt-4">
     <span class="block font-display text-[1.0625rem] uppercase tracking-[0.06em] text-on-dark">
-      {name}
+      {display}
     </span>
     <span class="type-small text-on-dark-mu">via {source}</span>
   </figcaption>

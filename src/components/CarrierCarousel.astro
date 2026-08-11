@@ -1,0 +1,334 @@
+---
+/**
+ * Carrier logo carousel.
+ *
+ * Steps one logo to the left every 2 seconds, looping seamlessly. Shows 2
+ * logos at a time on mobile, 3 on small tablets, 5 on desktop.
+ *
+ * Built with no library — a track of duplicated slides plus a transform, which
+ * is all a stepped marquee needs. Adding a carousel dependency for this would
+ * cost more bytes than the logos themselves.
+ *
+ * Carrier marks are rendered UNMODIFIED and full colour on white. Do not
+ * recolour, crop, grayscale, or apply filters — appointment agreements
+ * generally forbid it.
+ *
+ * Accessibility notes, please keep these:
+ *  · A visible pause control. WCAG 2.2.2 requires a way to stop motion that
+ *    starts automatically and runs more than five seconds, and hover-to-pause
+ *    alone does not help keyboard or touch users.
+ *  · prefers-reduced-motion turns the animation off entirely and leaves a
+ *    plain scrollable row.
+ *  · The whole strip is one list with a real accessible name; each logo keeps
+ *    its alt text. Duplicated slides are aria-hidden so a screen reader hears
+ *    each carrier once.
+ */
+import fs from "node:fs";
+import path from "node:path";
+import carriers from "@/data/carriers.json";
+import { url } from "@/data/site";
+
+interface Props {
+  /** Seconds between steps. */
+  interval?: number;
+  label?: string;
+}
+
+const { interval = 2, label = "Insurance carriers we are appointed with" } = Astro.props;
+
+const publicDir = path.resolve(process.cwd(), "public", "carriers");
+
+/**
+ * Read a PNG's real pixel dimensions from its IHDR header.
+ *
+ * The logos have been trimmed of their surrounding white padding, so they all
+ * have different aspect ratios now. Hardcoding one width/height would make the
+ * browser reserve the wrong box and shift the layout as each image decodes.
+ */
+function pngSize(file: string): { width: number; height: number } | null {
+  try {
+    const fd = fs.openSync(file, "r");
+    const header = Buffer.alloc(24);
+    fs.readSync(fd, header, 0, 24, 0);
+    fs.closeSync(fd);
+    if (header.toString("ascii", 1, 4) !== "PNG") return null;
+    return { width: header.readUInt32BE(16), height: header.readUInt32BE(20) };
+  } catch {
+    return null;
+  }
+}
+
+const items = carriers.flatMap((carrier) => {
+  const file = path.join(publicDir, carrier.file);
+  if (!fs.existsSync(file)) {
+    console.warn(`[carriers] missing logo file: public/carriers/${carrier.file}`);
+    return [];
+  }
+  const size = pngSize(file) ?? { width: 200, height: 80 };
+  return [{ ...carrier, ...size }];
+});
+
+// Two passes of the list so the track can run off the end of the first pass
+// and reset to the start of the second without a visible jump.
+const slides = [...items, ...items];
+---
+
+<div
+  class="carrier-carousel"
+  data-carousel
+  data-interval={interval * 1000}
+  data-count={items.length}
+>
+  <div class="carrier-carousel__viewport" data-viewport>
+    <ul class="carrier-carousel__track" data-track aria-label={label}>
+      {
+        slides.map((carrier, index) => (
+          <li class="carrier-carousel__slide" aria-hidden={index >= items.length ? "true" : undefined}>
+            <div class="carrier-carousel__card">
+              <img
+                src={url(`/carriers/${carrier.file}`)}
+                alt={index >= items.length ? "" : `${carrier.name} logo`}
+                width={carrier.width}
+                height={carrier.height}
+                loading={index < 6 ? "eager" : "lazy"}
+                decoding="async"
+              />
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <button type="button" class="carrier-carousel__toggle" data-toggle aria-pressed="false">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-icon="pause">
+      <rect x="6" y="5" width="4" height="14" rx="1"></rect>
+      <rect x="14" y="5" width="4" height="14" rx="1"></rect>
+    </svg>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-icon="play">
+      <path d="M8 5l11 7-11 7z"></path>
+    </svg>
+    <span data-toggle-text>Pause</span>
+  </button>
+</div>
+
+<style>
+  .carrier-carousel {
+    --visible: 2;
+    position: relative;
+  }
+
+  @media (min-width: 640px) {
+    .carrier-carousel {
+      --visible: 3;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .carrier-carousel {
+      --visible: 5;
+    }
+  }
+
+  .carrier-carousel__viewport {
+    overflow: hidden;
+  }
+
+  .carrier-carousel__track {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    will-change: transform;
+  }
+
+  /* The transition is added by script only once measurements are in, so the
+     first paint never animates in from the wrong offset. */
+  .carrier-carousel__track[data-animate="true"] {
+    transition: transform 600ms cubic-bezier(0.22, 0.68, 0.35, 1);
+  }
+
+  .carrier-carousel__slide {
+    flex: 0 0 calc(100% / var(--visible));
+    min-width: 0;
+    padding-inline: 8px;
+  }
+
+  @media (min-width: 1024px) {
+    .carrier-carousel__slide {
+      padding-inline: 12px;
+    }
+  }
+
+  .carrier-carousel__card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 104px;
+    padding: 14px 18px;
+    background: var(--ss-white);
+    border: 1px solid var(--ss-cream);
+    border-radius: 8px;
+  }
+
+  @media (min-width: 1024px) {
+    .carrier-carousel__card {
+      height: 120px;
+    }
+  }
+
+  .carrier-carousel__card img {
+    max-height: 100%;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .carrier-carousel__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 20px;
+    padding: 6px 12px;
+    min-height: 36px;
+    border: 1px solid color-mix(in srgb, var(--ss-oxblood) 30%, transparent);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--ss-oxblood);
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease;
+  }
+
+  .carrier-carousel__toggle:hover {
+    background: color-mix(in srgb, var(--ss-oxblood) 6%, transparent);
+    border-color: var(--ss-oxblood);
+  }
+
+  .carrier-carousel__toggle [data-icon="play"] {
+    display: none;
+  }
+
+  .carrier-carousel__toggle[aria-pressed="true"] [data-icon="play"] {
+    display: block;
+  }
+
+  .carrier-carousel__toggle[aria-pressed="true"] [data-icon="pause"] {
+    display: none;
+  }
+
+  /* No auto-advance at all. The row stays swipeable so every logo is still
+     reachable. */
+  @media (prefers-reduced-motion: reduce) {
+    .carrier-carousel__track {
+      transition: none !important;
+      transform: none !important;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+    }
+
+    .carrier-carousel__viewport {
+      overflow-x: auto;
+    }
+
+    .carrier-carousel__slide {
+      scroll-snap-align: start;
+    }
+
+    .carrier-carousel__toggle {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  // Interactivity budget item 5. Vanilla, no dependency.
+  const root = document.querySelector<HTMLElement>("[data-carousel]");
+  const track = root?.querySelector<HTMLElement>("[data-track]");
+  const toggle = root?.querySelector<HTMLButtonElement>("[data-toggle]");
+  const toggleText = root?.querySelector<HTMLElement>("[data-toggle-text]");
+
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  if (root && track && toggle && toggleText && !reduced.matches) {
+    const count = Number(root.dataset.count || 0);
+    const interval = Number(root.dataset.interval || 2000);
+
+    let index = 0;
+    let timer: number | undefined;
+    let paused = false;
+
+    const step = () => {
+      const slide = track.firstElementChild as HTMLElement | null;
+      if (!slide) return;
+      const width = slide.getBoundingClientRect().width;
+
+      index += 1;
+      track.dataset.animate = "true";
+      track.style.transform = `translate3d(-${index * width}px, 0, 0)`;
+
+      // After advancing through the first copy of the list, jump back to the
+      // start with the transition off. The second copy is pixel-identical at
+      // that moment, so the reset is invisible.
+      if (index >= count) {
+        window.setTimeout(() => {
+          track.dataset.animate = "false";
+          index = 0;
+          track.style.transform = "translate3d(0, 0, 0)";
+        }, 620);
+      }
+    };
+
+    const start = () => {
+      window.clearInterval(timer);
+      timer = window.setInterval(step, interval);
+    };
+
+    const stop = () => window.clearInterval(timer);
+
+    const setPaused = (next: boolean) => {
+      paused = next;
+      toggle.setAttribute("aria-pressed", String(next));
+      toggleText.textContent = next ? "Play" : "Pause";
+      toggle.setAttribute(
+        "aria-label",
+        next ? "Play the carrier logo carousel" : "Pause the carrier logo carousel",
+      );
+      if (next) stop();
+      else start();
+    };
+
+    toggle.addEventListener("click", () => setPaused(!paused));
+
+    // Courtesy pause while someone is reading or tabbing through.
+    root.addEventListener("mouseenter", () => !paused && stop());
+    root.addEventListener("mouseleave", () => !paused && start());
+    root.addEventListener("focusin", () => !paused && stop());
+    root.addEventListener("focusout", () => !paused && start());
+
+    // Do not animate in a background tab.
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) stop();
+      else if (!paused) start();
+    });
+
+    // Slide width changes with the breakpoint, so re-anchor on resize.
+    let resizeTimer: number | undefined;
+    window.addEventListener("resize", () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        const slide = track.firstElementChild as HTMLElement | null;
+        if (!slide) return;
+        track.dataset.animate = "false";
+        track.style.transform = `translate3d(-${index * slide.getBoundingClientRect().width}px, 0, 0)`;
+      }, 150);
+    });
+
+    setPaused(false);
+  }
+</script>

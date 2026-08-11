@@ -6,15 +6,18 @@
  * Marcellus caps, title in Archivo 500, then a contact block where both the
  * phone and the email are real links with visible focus states.
  *
- * Headshots were supplied to the project as images but not as files in the
- * repository, so this renders a monogram placeholder until they are added.
- * Drop these four files into public/team/ and the photo appears automatically:
+ * Headshots are 750x900 (a 5:6 portrait), so the frame is 5:6 rather than
+ * square — a 1:1 frame would crop roughly a sixth off the top and bottom of
+ * each photo.
  *
- *   <slug>-500.webp   <slug>-1000.webp
- *   <slug>-500.jpg    <slug>-1000.jpg
+ * Until the image files exist this renders a monogram placeholder. Drop these
+ * files into public/team/ and the photo appears automatically on the next
+ * build, no code change needed:
  *
- * Normalise to a 1:1 crop before exporting. Note from the spec's open items:
- * Sam's original is 733x738 and will be slightly softer than Nick's at 1000px.
+ *   sam-genuis-750.jpg    sam-genuis-750.webp
+ *   nick-henzgen-750.jpg  nick-henzgen-750.webp
+ *
+ * The .webp is optional — the .jpg alone is enough to switch the card over.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -29,7 +32,8 @@ const { leader } = Astro.props;
 
 const teamDir = path.resolve(process.cwd(), "public", "team");
 const base = `${leader.slug}`;
-const hasPhoto = fs.existsSync(path.join(teamDir, `${base}-1000.jpg`));
+const hasPhoto = fs.existsSync(path.join(teamDir, `${base}-750.jpg`));
+const hasWebp = fs.existsSync(path.join(teamDir, `${base}-750.webp`));
 
 const initials = leader.name
   .split(" ")
@@ -38,25 +42,21 @@ const initials = leader.name
 ---
 
 <article class="card-dark overflow-hidden">
-  <div class="aspect-square w-full bg-cream">
+  <div class="aspect-[5/6] w-full bg-cream">
     {
       hasPhoto ? (
         <picture>
-          <source
-            type="image/webp"
-            srcset={`${url(`/team/${base}-500.webp`)} 500w, ${url(`/team/${base}-1000.webp`)} 1000w`}
-            sizes="(min-width: 1024px) 560px, 100vw"
-          />
+          {hasWebp && (
+            <source type="image/webp" srcset={url(`/team/${base}-750.webp`)} />
+          )}
           <img
-            src={url(`/team/${base}-1000.jpg`)}
-            srcset={`${url(`/team/${base}-500.jpg`)} 500w, ${url(`/team/${base}-1000.jpg`)} 1000w`}
-            sizes="(min-width: 1024px) 560px, 100vw"
+            src={url(`/team/${base}-750.jpg`)}
             alt={leader.headshotAlt}
-            width="1000"
-            height="1000"
+            width="750"
+            height="900"
             loading="lazy"
             decoding="async"
-            class="h-full w-full object-cover"
+            class="h-full w-full object-cover object-top"
           />
         </picture>
       ) : (
@@ -66,7 +66,14 @@ const initials = leader.name
           role="img"
           aria-label={`Photograph of ${leader.name} — pending`}
         >
-          <span class="font-display text-[clamp(3rem,10vw,5rem)] tracking-[0.08em] text-oxblood/30">
+          {/* The wrapper already carries role="img" and a label, so the
+              monogram itself is decorative — hiding it keeps a screen reader
+              from announcing loose letters, and keeps the contrast checker
+              off a purely ornamental glyph. */}
+          <span
+            aria-hidden="true"
+            class="font-display text-[clamp(3rem,10vw,5rem)] tracking-[0.08em] text-oxblood/60"
+          >
             {initials}
           </span>
         </div>

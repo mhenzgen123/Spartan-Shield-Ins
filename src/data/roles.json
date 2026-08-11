@@ -1,5 +1,5 @@
 {
-  "_STATUS": "DRAFT — written from the brief, NOT yet approved by Nick and Sam. Both descriptions need owner sign-off before launch. No compensation figures are published; see the handoff note in README.md.",
+  "_STATUS": "Client-revised 2026-08-11: Sales Executive now says 'many carrier appointments' rather than a count, and the licensing requirement was removed from Client Relations Specialist. Still no compensation figures published — see the handoff note in README.md.",
   "roles": [
     {
       "slug": "sales-executive",
@@ -8,7 +8,7 @@
       "location": "Hybrid, Louisville KY",
       "discipline": "Property & Casualty",
       "summary": [
-        "You will build a book of personal and commercial business from referrals, inbound calls, and your own outbound work. We supply nine carrier appointments, a comparative rater, and warm inbound volume from a 5.0-rated Google profile. You supply the hustle and the follow-up.",
+        "You will build a book of personal and commercial business from referrals, inbound calls, and your own outbound work. We supply many carrier appointments, a comparative rater, and warm inbound volume from a 5.0-rated Google profile. You supply the hustle and the follow-up.",
         "Kentucky P&C license required, or willingness to obtain one before start. We will cover pre-licensing and exam costs for the right candidate."
       ]
     },
@@ -19,8 +19,7 @@
       "location": "Hybrid, Louisville KY",
       "discipline": "Service and Retention",
       "summary": [
-        "You will own the client experience after the sale: endorsements, billing questions, certificates, claims intake and follow-through, and renewal reviews. You are the reason clients stay, and you will have the authority to actually fix things rather than route them.",
-        "Kentucky P&C license required within 90 days of start. We will cover pre-licensing and exam costs."
+        "You will own the client experience after the sale: endorsements, billing questions, certificates, claims intake and follow-through, and renewal reviews. You are the reason clients stay, and you will have the authority to actually fix things rather than route them."
       ]
     }
   ]
