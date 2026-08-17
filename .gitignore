@@ -14,6 +14,12 @@ node_modules/
 # Cloudflare / Wrangler local state
 .wrangler/
 
+# Local-only Wrangler config. Copy wrangler.local.toml to this name to run the
+# Pages Functions locally. It is ignored on purpose: if it were committed,
+# Cloudflare Pages would read bindings from it instead of from the dashboard,
+# which is where they are configured. See README "Running the forms locally".
+wrangler.toml
+
 # Editor and OS noise
 .DS_Store
 Thumbs.db

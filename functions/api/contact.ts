@@ -29,8 +29,17 @@ import { sendNotification } from "../_lib/notify";
  * because "they ticked a box" is not a TCPA defence; "here is the exact
  * sentence they read on this date" is.
  *
- * Consent is never required. A submission with both boxes unchecked is a
+ * Consent is never required. A submission with the box unchecked is a
  * completely valid submission and must succeed.
+ *
+ * ONE CHECKBOX, TWO COLUMNS — deliberate, 2026-08-13.
+ * The form used to have separate service and marketing checkboxes, and the
+ * table still has a column pair for each. The client consolidated to a single
+ * combined consent whose wording covers marketing *and* customer care
+ * messages, so one tick genuinely grants both. Rather than migrate a table
+ * that may already hold live rows, the same value and the same label text are
+ * written to both pairs. That keeps historical rows readable, keeps the schema
+ * stable, and is an accurate record: the person did agree to both.
  */
 
 const TOPICS = [
@@ -88,13 +97,18 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   // The label text is taken from the request so the record reflects exactly
   // what was rendered to this person. It is length-capped and stored as-is.
 
-  const consentService = checkbox(payload.consent_service);
-  const consentMarketing = checkbox(payload.consent_marketing);
+  // `consent_sms` is the current field name. The old `consent_marketing` /
+  // `consent_service` names are still accepted so a visitor holding a cached
+  // copy of the previous page does not silently lose their consent during a
+  // deploy.
+  const consentGiven = checkbox(
+    payload.consent_sms ?? payload.consent_marketing ?? payload.consent_service,
+  );
 
-  const consentServiceText = optionalText(payload.consent_service_text, "Consent text", 2000);
-  const consentMarketingText = optionalText(payload.consent_marketing_text, "Consent text", 2000);
-  if (!consentServiceText.ok) return badRequest(consentServiceText.error);
-  if (!consentMarketingText.ok) return badRequest(consentMarketingText.error);
+  const consentTextRaw =
+    payload.consent_sms_text ?? payload.consent_marketing_text ?? payload.consent_service_text;
+  const consentText = optionalText(consentTextRaw, "Consent text", 2000);
+  if (!consentText.ok) return badRequest(consentText.error);
 
   // --- Persist ------------------------------------------------------------
 
@@ -118,10 +132,11 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
         phone.value,
         topicValue,
         message.value,
-        consentService,
-        consentMarketing,
-        consentServiceText.value,
-        consentMarketingText.value,
+        // Both columns carry the same combined consent — see the note above.
+        consentGiven,
+        consentGiven,
+        consentText.value,
+        consentText.value,
         pageUrl.value,
         (request.headers.get("User-Agent") ?? "").slice(0, LIMITS.userAgent),
         clientIp ?? "",
@@ -144,13 +159,12 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       ["Email", email.value],
       ["Mobile", phone.value],
       ["Topic", topicValue],
-      ["Service texts", consentService ? "YES — opted in" : "No"],
-      ["Marketing texts", consentMarketing ? "YES — opted in" : "No"],
+      ["Text messages", consentGiven ? "YES — opted in" : "No"],
       ["Submitted", createdAt],
     ],
     body: { label: "Message", value: message.value },
     footerNote:
-      "Consent selections and the exact consent wording shown to this person are stored with the record in the admin dashboard.",
+      "The exact consent wording shown to this person is stored with the record in the admin dashboard.",
   });
 
   return json({ ok: true, id }, 201);

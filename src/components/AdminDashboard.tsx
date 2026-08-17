@@ -448,7 +448,7 @@ export default function AdminDashboard({ positions }: Props) {
               <table className="w-full min-w-[860px] border-collapse text-left">
                 <thead>
                   <tr className="border-b border-on-light-mu/25">
-                    {["Date", "Name", "Phone", "Email", "Topic", "SMS consent", "Status"].map(
+                    {["Date", "Name", "Phone", "Email", "Topic", "Texts", "Status"].map(
                       (heading) => (
                         <th
                           key={heading}
@@ -495,10 +495,13 @@ export default function AdminDashboard({ positions }: Props) {
                         </td>
                         <td className="type-small px-3 py-3 text-on-light-mu">{row.topic}</td>
                         <td className="px-3 py-3">
-                          <div className="flex flex-wrap gap-1.5">
-                            <ConsentPill on={row.consent_service === 1} label="Service" />
-                            <ConsentPill on={row.consent_marketing === 1} label="Marketing" />
-                          </div>
+                          {/* One combined consent since 2026-08-13. The table
+                              keeps both legacy columns and they are written
+                              together, so either one answers the question. */}
+                          <ConsentPill
+                            on={row.consent_marketing === 1 || row.consent_service === 1}
+                            label={row.consent_marketing === 1 || row.consent_service === 1 ? "Opted in" : "No"}
+                          />
                         </td>
                         <td className="px-3 py-3">
                           <StatusSelect
@@ -529,22 +532,31 @@ export default function AdminDashboard({ positions }: Props) {
                               <dl className="mt-3 space-y-3">
                                 <div>
                                   <dt className="type-small font-semibold text-on-light">
-                                    Service messages —{" "}
-                                    {row.consent_service === 1 ? "AGREED" : "not agreed"}
+                                    Text messages —{" "}
+                                    {row.consent_marketing === 1 || row.consent_service === 1
+                                      ? "AGREED"
+                                      : "not agreed"}
                                   </dt>
                                   <dd className="type-small text-on-light-mu">
-                                    {row.consent_service_text}
+                                    {row.consent_marketing_text || row.consent_service_text}
                                   </dd>
                                 </div>
-                                <div>
-                                  <dt className="type-small font-semibold text-on-light">
-                                    Marketing messages —{" "}
-                                    {row.consent_marketing === 1 ? "AGREED" : "not agreed"}
-                                  </dt>
-                                  <dd className="type-small text-on-light-mu">
-                                    {row.consent_marketing_text}
-                                  </dd>
-                                </div>
+                                {/* Rows written before 2026-08-13 had two
+                                    separate consents with different wording.
+                                    Show the second only when it actually
+                                    differs, so old records stay auditable. */}
+                                {row.consent_service_text &&
+                                  row.consent_service_text !== row.consent_marketing_text && (
+                                    <div>
+                                      <dt className="type-small font-semibold text-on-light">
+                                        Service messages (legacy) —{" "}
+                                        {row.consent_service === 1 ? "AGREED" : "not agreed"}
+                                      </dt>
+                                      <dd className="type-small text-on-light-mu">
+                                        {row.consent_service_text}
+                                      </dd>
+                                    </div>
+                                  )}
                               </dl>
                               <p className="type-small mt-3 text-on-light-mu">
                                 Submitted from {row.page_url || "—"} · IP {row.ip_address || "—"}

@@ -1,0 +1,36 @@
+# LOCAL DEVELOPMENT ONLY. Cloudflare Pages does not read this file.
+#
+# Pages looks for `wrangler.toml` / `wrangler.jsonc`. That file was deliberately
+# removed so the Cloudflare dashboard is the single place bindings and variables
+# are configured — see README "Where to deploy". This file is named differently
+# on purpose so it can never take over that role.
+#
+# `wrangler pages dev` refuses a custom config path, so copy this to the name it
+# does read. That name is gitignored, so it cannot be committed back and cannot
+# start overriding the dashboard:
+#
+#   cp wrangler.local.toml wrangler.toml   # once, per clone
+#   npm run build
+#   npm run db:migrate:local               # once, to create the tables
+#   npm run dev:functions                  # whole site incl. the forms
+#
+# Contains no secrets and no database ID. The local D1 is a SQLite file under
+# .wrangler/, nothing to do with production.
+
+name = "spartan-shield-web"
+
+# Pinned rather than left to default. `wrangler pages dev` otherwise assumes
+# today's date, and the bundled local runtime refuses any date newer than the
+# binary it shipped with.
+compatibility_date = "2026-08-07"
+
+pages_build_output_dir = "dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "spartan-shield"
+database_id = "local"
+
+[[r2_buckets]]
+binding = "RESUMES"
+bucket_name = "spartan-shield-resumes"

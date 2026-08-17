@@ -28,10 +28,11 @@ name acceptable.
 
 ### Use case
 
-**Mixed** (Customer Care plus Marketing).
+**Marketing** — or **Mixed** (Customer Care plus Marketing) if the form offers
+it.
 
-If RingCentral requires a single selection and Mixed is unavailable, select
-**Marketing** — it is the stricter category and covers the rest.
+The single opt-in on the site is worded as a marketing consent that also covers
+customer care messages, so Marketing is the correct and stricter selection.
 
 ### Campaign description
 
@@ -41,22 +42,19 @@ If RingCentral requires a single selection and Mixed is unavailable, select
 > have otherwise asked us to contact them. Messages cover new business quoting,
 > policy servicing and endorsements, billing and payment reminders, claims
 > intake and status updates, appointment scheduling, and day to day
-> correspondence with their assigned agent. Consumers who separately opt in to
-> marketing also receive renewal reminders, coverage review offers, and agency
-> news, limited to 6 messages per month.
+> correspondence with their assigned agent, along with renewal reminders,
+> coverage review offers, and agency news. Message volume is limited to 6
+> messages per month.
 
 ### How consent is collected
 
-> Consumers opt in through two separate, unchecked, optional checkboxes on the
-> public contact form at https://spartanshieldins.com/contact. One checkbox
-> covers service messages and one covers marketing messages. Neither is a
-> condition of purchase. Both checkbox labels include the brand name Spartan
-> Shield Insurance, message frequency, "message and data rates may apply," HELP
-> and STOP instructions, and links to the Privacy Policy at
+> Consumers opt in through a single unchecked, optional checkbox on the public
+> contact form at https://spartanshieldins.com/contact. It is not a condition of
+> purchase. The checkbox label includes the brand name Spartan Shield Insurance,
+> the message frequency, "message and data rates may apply," HELP and STOP
+> instructions, and links to the Privacy Policy at
 > https://spartanshieldins.com/privacy and the SMS Terms and Conditions at
-> https://spartanshieldins.com/sms-terms. Consumers may also opt in verbally
-> during a call with a licensed agent using a scripted disclosure, or by texting
-> the agency first.
+> https://spartanshieldins.com/sms-terms.
 
 ### Call-to-action URL
 
@@ -77,27 +75,17 @@ page and from the footer. One click from the homepage.
 
 ## Consent language, exactly as it appears on the form
 
-These two strings are rendered on `/contact` character for character. If a
-reviewer compares the campaign submission to the live page, they will match.
+This string is rendered on `/contact` character for character. If a reviewer
+compares the campaign submission to the live page, they will match.
 
-**Checkbox 1 — service messages** (id `consent_service`, unchecked, not
-required):
-
-> I agree to receive text messages from Spartan Shield Insurance at the mobile
-> number provided, about quotes, policies, billing, claims, and service
-> requests. Message frequency varies. Message and data rates may apply. Reply
-> HELP for help or STOP to opt out at any time. See our Privacy Policy and SMS
-> Terms and Conditions.
-
-**Checkbox 2 — marketing messages** (id `consent_marketing`, unchecked, not
-required):
+**Single checkbox** (id `consent_sms`, unchecked, not required):
 
 > I agree to receive marketing and promotional text messages from Spartan
 > Shield Insurance at the mobile number provided, including renewal reminders,
-> coverage review offers, and agency news. Up to 6 messages per month. Message
-> and data rates may apply. Reply HELP for help or STOP to opt out at any time.
-> Consent is not a condition of purchase. See our Privacy Policy and SMS Terms
-> and Conditions.
+> coverage review offers, and customer care messages. Up to 6 messages per
+> month. Message and data rates may apply. Reply HELP for help or STOP to opt
+> out at any time. Consent is not a condition of purchase. See our Privacy
+> Policy and SMS Terms and Conditions.
 
 On the live page, "Privacy Policy" and "SMS Terms and Conditions" are hyperlinks
 to `/privacy` and `/sms-terms`.
@@ -108,9 +96,8 @@ to `/privacy` and `/sms-terms`.
 
 ### Opt-in confirmation
 
-> Spartan Shield Insurance: You are subscribed. Msg frequency varies, up to 6
-> marketing msgs/month. Msg & data rates may apply. Reply HELP for help, STOP to
-> cancel.
+> Spartan Shield Insurance: You are subscribed. Up to 6 msgs/month. Msg & data
+> rates may apply. Reply HELP for help, STOP to cancel.
 
 ### HELP response
 
@@ -140,21 +127,17 @@ Each names the brand; the third carries opt-out language.
 
 ---
 
-## Verbal opt-in script for agents
+## A note on opt-in channels
 
-The campaign description above states that verbal opt-in is one of the
-channels, so reviewers sometimes ask to see the script. Agents should use this
-wording:
+`/sms-terms` now lists **one** opt-in method: submitting the online form. Do not
+claim verbal or text-first opt-in in the campaign submission unless that section
+of the site is updated to match — a reviewer comparing the two will treat any
+extra channel as an unsupported claim.
 
-> "Before we finish, is it alright if we text you at this number about your
-> quote, your policy, and service items? Message frequency varies, message and
-> data rates may apply, and you can reply STOP any time to opt out. And
-> separately, would you like occasional texts about renewal offers and coverage
-> reviews, up to six a month? That one is optional and not required to buy a
-> policy."
-
-**Agents must log both answers with the date**, in the agency management system.
-An unlogged verbal consent is the same as no consent if it is ever challenged.
+If the agency does want to collect consent verbally on calls, add it back to
+`/sms-terms` §2 first, then use a scripted disclosure that reads the checkbox
+language aloud, and log the answer with the date in the agency management
+system. An unlogged verbal consent is the same as no consent if challenged.
 
 ---
 
@@ -163,13 +146,13 @@ An unlogged verbal consent is the same as no consent if it is ever challenged.
 | Code | Rejection | Where it is fixed |
 |---|---|---|
 | CR4015 | Call to action missing or inaccessible | `/contact` form, linked from top-level nav, footer, and the Privacy Policy. Publicly reachable, no login. |
-| CR4002 | CTA missing registered/DBA brand name | Both consent labels name "Spartan Shield Insurance". Every page footer declares the trade name relationship. |
-| CR4001 | Insufficient consent | Two separate, unchecked, non-required checkboxes. Service and marketing consent are independent. |
-| CR4003 | No HELP instructions | Both checkbox labels, `/sms-terms` §6, the Privacy Policy §4, and the footer. |
-| CR4004 | No STOP instructions | Both checkbox labels, `/sms-terms` §5, the Privacy Policy §4, and the footer. |
-| CR4005 | No message frequency disclosure | Service: "Message frequency varies." Marketing: "Up to 6 messages per month." Both labels and `/sms-terms` §3. |
-| CR4006 | No message and data rates disclosure | Both labels, `/sms-terms` §4, Privacy Policy §4. |
-| CR4007 | No complete terms or link to terms | Both labels link to `/privacy` and `/sms-terms`. `/sms-terms` is a standalone URL with all ten sections. |
+| CR4002 | CTA missing registered/DBA brand name | The consent label names "Spartan Shield Insurance". Every page footer declares the trade name relationship. |
+| CR4001 | Insufficient consent | An unchecked, non-required checkbox carrying "Consent is not a condition of purchase". |
+| CR4003 | No HELP instructions | The checkbox label, `/sms-terms` §6, the Privacy Policy §4, and the footer. |
+| CR4004 | No STOP instructions | The checkbox label, `/sms-terms` §5, the Privacy Policy §4, and the footer. |
+| CR4005 | No message frequency disclosure | "Up to 6 messages per month" — on the label, `/sms-terms` §3, and the Privacy Policy §4. |
+| CR4006 | No message and data rates disclosure | The label, `/sms-terms` §4, Privacy Policy §4. |
+| CR4007 | No complete terms or link to terms | The label links to `/privacy` and `/sms-terms`. `/sms-terms` is a standalone URL with all ten sections. |
 
 ---
 

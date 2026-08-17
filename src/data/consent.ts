@@ -1,31 +1,37 @@
 /**
  * SMS CONSENT LANGUAGE — DO NOT EDIT WITHOUT READING THIS.
  *
- * These strings are the single source of truth for two things at once:
+ * This string is the single source of truth for two things at once:
  *
- *   1. The checkbox labels rendered on /contact
+ *   1. The checkbox label rendered on /contact
  *   2. The consent language pasted into the RingCentral / TCR campaign
- *      submission
+ *      submission (docs/ringcentral-resubmission.md)
  *
  * If the site copy and the campaign description diverge by even one clause,
- * the A2P 10DLC campaign is denied. The previous submission was rejected on
- * eight codes, seven of which were call-to-action failures. Keeping one
- * source prevents a repeat.
+ * the A2P 10DLC campaign is denied. The first submission was rejected on eight
+ * codes, seven of which were call-to-action failures. Keeping one source
+ * prevents a repeat.
+ *
+ * CHANGED 2026-08-13, at the client's direction: this was two separate
+ * checkboxes (service consent and marketing consent). It is now ONE combined
+ * consent whose wording covers marketing *and* customer care messages. If you
+ * ever split it again, split it in this file and the form follows
+ * automatically — do not add a second checkbox in markup.
  *
  * Every element below is load-bearing for a specific TCR rejection code:
  *
  *   CR4002  the brand name "Spartan Shield Insurance" appears verbatim
  *   CR4003  "Reply HELP for help"
  *   CR4004  "STOP to opt out at any time"
- *   CR4005  message frequency ("varies" / "Up to 6 messages per month")
+ *   CR4005  message frequency ("Up to 6 messages per month")
  *   CR4006  "Message and data rates may apply."
  *   CR4007  links to /privacy and /sms-terms
- *   CR4001  two independent, unchecked, non-required checkboxes
+ *   CR4001  an unchecked, non-required checkbox, plus
+ *           "Consent is not a condition of purchase"
  *
  * Rules enforced elsewhere in the codebase, restated here so they are not
- * lost: both checkboxes render UNCHECKED, neither carries `required`, and no
- * script pre-selects either one. The form must submit successfully with both
- * unchecked.
+ * lost: the checkbox renders UNCHECKED, does not carry `required`, and no
+ * script pre-selects it. The form must submit successfully with it unchecked.
  */
 
 export interface ConsentLink {
@@ -49,30 +55,21 @@ export interface ConsentCheckbox {
 const PRIVACY: ConsentLink = { label: "Privacy Policy", href: "/privacy" };
 const SMS_TERMS: ConsentLink = { label: "SMS Terms and Conditions", href: "/sms-terms" };
 
-export const consentService: ConsentCheckbox = {
-  id: "consent_service",
-  name: "consent_service",
+/**
+ * The one consent checkbox on /contact. Its wording covers marketing and
+ * customer care messages together, so a single tick grants both.
+ */
+export const consentSms: ConsentCheckbox = {
+  id: "consent_sms",
+  name: "consent_sms",
   text:
-    "I agree to receive text messages from Spartan Shield Insurance at the mobile number provided, " +
-    "about quotes, policies, billing, claims, and service requests. Message frequency varies. " +
-    "Message and data rates may apply. Reply HELP for help or STOP to opt out at any time. " +
-    "See our Privacy Policy and SMS Terms and Conditions.",
+    "I agree to receive marketing and promotional text messages from Spartan Shield Insurance at " +
+    "the mobile number provided, including renewal reminders, coverage review offers, and customer " +
+    "care messages. Up to 6 messages per month. Message and data rates may apply. Reply HELP for " +
+    "help or STOP to opt out at any time. Consent is not a condition of purchase. See our Privacy " +
+    "Policy and SMS Terms and Conditions.",
   links: [PRIVACY, SMS_TERMS],
 };
-
-export const consentMarketing: ConsentCheckbox = {
-  id: "consent_marketing",
-  name: "consent_marketing",
-  text:
-    "I agree to receive marketing and promotional text messages from Spartan Shield Insurance at the " +
-    "mobile number provided, including renewal reminders, coverage review offers, and agency news. " +
-    "Up to 6 messages per month. Message and data rates may apply. Reply HELP for help or STOP to opt " +
-    "out at any time. Consent is not a condition of purchase. See our Privacy Policy and " +
-    "SMS Terms and Conditions.",
-  links: [PRIVACY, SMS_TERMS],
-};
-
-export const consentCheckboxes: ConsentCheckbox[] = [consentService, consentMarketing];
 
 /** Eyebrow above the bordered consent container on /contact. */
 export const consentEyebrow = "TEXT MESSAGING (OPTIONAL)";
@@ -80,9 +77,6 @@ export const consentEyebrow = "TEXT MESSAGING (OPTIONAL)";
 /**
  * Split a consent string into text and link segments so the label can be
  * rendered with real anchors without ever retyping the copy into markup.
- *
- * Used by both the Astro server render and the React island, so the two can
- * never drift apart.
  */
 export type ConsentSegment =
   | { type: "text"; value: string }
@@ -124,7 +118,7 @@ export function segmentConsent(box: ConsentCheckbox): ConsentSegment[] {
 
 export const smsAutoReplies = {
   optInConfirmation:
-    "Spartan Shield Insurance: You are subscribed. Msg frequency varies, up to 6 marketing msgs/month. " +
+    "Spartan Shield Insurance: You are subscribed. Up to 6 msgs/month. " +
     "Msg & data rates may apply. Reply HELP for help, STOP to cancel.",
   help:
     "Spartan Shield Insurance: For help, call (502) 308-4382 or email sam@spartanshieldins.com. " +

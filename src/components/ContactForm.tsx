@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from "react";
 import Turnstile from "./Turnstile";
 import {
-  consentCheckboxes,
+  consentSms,
   consentEyebrow,
   segmentConsent,
   type ConsentCheckbox,
@@ -13,15 +13,18 @@ import { url } from "@/data/site";
  *
  * COMPLIANCE INVARIANTS. Do not "improve" any of these:
  *
- *   · Both consent checkboxes render UNCHECKED on first load AND after a
- *     failed validation pass. Nothing pre-selects them.
- *   · Neither checkbox carries `required`. The form submits successfully with
- *     both unchecked — consent is not a condition of contacting the agency.
+ *   · The consent checkbox renders UNCHECKED on first load AND after a failed
+ *     validation pass. Nothing pre-selects it.
+ *   · It does not carry `required`. The form submits successfully with it
+ *     unchecked — consent is not a condition of contacting the agency.
  *   · The label text is imported from src/data/consent.ts and never retyped
- *     here. The same strings go into the TCR campaign submission.
- *   · The full label text of both boxes is posted with every submission and
- *     stored on the row, so a historical record shows exactly what a person
- *     agreed to on that date even if the wording is later revised.
+ *     here. The same string goes into the TCR campaign submission.
+ *   · The full label text is posted with every submission and stored on the
+ *     row, so a historical record shows exactly what a person agreed to on
+ *     that date even if the wording is later revised.
+ *
+ * As of 2026-08-13 this is ONE combined consent covering marketing and
+ * customer care messages, not two separate boxes.
  */
 
 export const TOPICS = [
@@ -40,8 +43,7 @@ interface Values {
   phone: string;
   topic: Topic | "";
   message: string;
-  consent_service: boolean;
-  consent_marketing: boolean;
+  consent_sms: boolean;
 }
 
 type FieldName = "name" | "email" | "phone" | "topic" | "message";
@@ -53,8 +55,7 @@ const EMPTY: Values = {
   topic: "",
   message: "",
   // Unchecked. CR4001.
-  consent_service: false,
-  consent_marketing: false,
+  consent_sms: false,
 };
 
 function validateField(field: FieldName, values: Values): string {
@@ -174,8 +175,7 @@ export default function ContactForm({ siteKey }: { siteKey?: string }) {
           page_url: window.location.href,
           turnstile_token: token,
           // The exact wording shown to this person, stored on the row.
-          consent_service_text: consentCheckboxes[0].text,
-          consent_marketing_text: consentCheckboxes[1].text,
+          consent_sms_text: consentSms.text,
         }),
       });
 
@@ -356,29 +356,20 @@ export default function ContactForm({ siteKey }: { siteKey?: string }) {
       <fieldset className="rounded-[8px] border border-on-light-mu/30 bg-parchment/60 px-4 pb-4 pt-1">
         <legend className="type-eyebrow px-2 text-oxblood">{consentEyebrow}</legend>
 
-        <div className="space-y-3">
-          {consentCheckboxes.map((box) => (
-            <div key={box.id} className="flex items-start gap-3">
-              <input
-                className="control-box"
-                type="checkbox"
-                id={box.id}
-                name={box.name}
-                /* Unchecked by default and after any validation error. */
-                checked={values[box.name as "consent_service" | "consent_marketing"]}
-                onChange={(event) =>
-                  setValue(
-                    box.name as "consent_service" | "consent_marketing",
-                    event.target.checked,
-                  )
-                }
-                /* Deliberately NOT required. CR4001. */
-              />
-              <label className="type-small !leading-[1.5] text-on-light-mu" htmlFor={box.id}>
-                <ConsentLabel box={box} />
-              </label>
-            </div>
-          ))}
+        <div className="flex items-start gap-3">
+          <input
+            className="control-box"
+            type="checkbox"
+            id={consentSms.id}
+            name={consentSms.name}
+            /* Unchecked by default and after any validation error. */
+            checked={values.consent_sms}
+            onChange={(event) => setValue("consent_sms", event.target.checked)}
+            /* Deliberately NOT required. CR4001. */
+          />
+          <label className="type-small !leading-[1.5] text-on-light-mu" htmlFor={consentSms.id}>
+            <ConsentLabel box={consentSms} />
+          </label>
         </div>
       </fieldset>
 

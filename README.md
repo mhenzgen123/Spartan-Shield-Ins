@@ -58,7 +58,7 @@ D1 and a local R2 directory under `.wrangler/`.
 | `npm run check:all` | Both of the above |
 | `npm run assets` | Regenerate the OG image and touch icon |
 | `npm run db:migrate:local` | Apply migrations to the local D1 |
-| `npm run db:migrate:remote` | Apply migrations to the production D1 |
+| `npm run db:migrate:remote` | Apply migrations to the production D1 (needs a wrangler.toml; see note) |
 
 `src/` and `functions/` have separate `tsconfig.json` files on purpose: the
 Functions run in the Workers runtime and need `@cloudflare/workers-types`, which
@@ -130,18 +130,27 @@ comes from.
 The consent block on the contact page is the artifact the whole A2P campaign
 depends on. Each rule below maps to a specific rejection code.
 
+As of 2026-08-13 this is **one** combined checkbox, not two. It was previously a
+separate service consent and marketing consent; the client consolidated them
+into a single consent whose wording covers marketing and customer care
+messages together.
+
 | Rule | Why |
 |---|---|
-| Both checkboxes render **unchecked** on load and after a failed validation | CR4001 |
-| Neither checkbox is **required**; the form submits with both unchecked | CR4001 |
-| The two consents are **independent** — service and marketing are separate | CR4001 |
-| Labels name **"Spartan Shield Insurance"** verbatim | CR4002 |
-| Labels contain HELP instructions | CR4003 |
-| Labels contain STOP instructions | CR4004 |
-| Labels state frequency ("varies" / "up to 6 per month") | CR4005 |
-| Labels state "Message and data rates may apply." | CR4006 |
-| Labels link to `/privacy` and `/sms-terms` | CR4007 |
+| The checkbox renders **unchecked** on load and after a failed validation | CR4001 |
+| It is not **required**; the form submits with it unchecked | CR4001 |
+| The label states "Consent is not a condition of purchase" | CR4001 |
+| The label names **"Spartan Shield Insurance"** verbatim | CR4002 |
+| The label contains HELP instructions | CR4003 |
+| The label contains STOP instructions | CR4004 |
+| The label states frequency ("Up to 6 messages per month") | CR4005 |
+| The label states "Message and data rates may apply." | CR4006 |
+| The label links to `/privacy` and `/sms-terms` | CR4007 |
 | `/contact` is in the top-level nav, one click from the homepage, no login | CR4015 |
+
+The frequency figure has to agree in three places: the checkbox label,
+`/sms-terms` §3, and the Privacy Policy §4. Change one and you must change all
+three, or a reviewer comparing them has grounds to deny.
 
 **The label text lives in exactly one place: `src/data/consent.ts`.** It is
 imported into the form and must be pasted unchanged into the RingCentral
@@ -152,6 +161,12 @@ Never retype consent copy into markup.
 Every submission stores the **full label text** on the row, not just a boolean.
 If the wording is later revised, historical records still show exactly what a
 given person agreed to on that date. That is the TCPA defence.
+
+The `contact_submissions` table still has both legacy column pairs
+(`consent_service*` and `consent_marketing*`). The single consent is written to
+both, so no migration was needed and rows written before the consolidation stay
+readable. The admin dashboard shows one status, and surfaces the older service
+wording only on rows where it actually differs.
 
 The footer carries the STOP/HELP line and the trade name declaration on every
 page. Both are load-bearing. Do not remove them.
